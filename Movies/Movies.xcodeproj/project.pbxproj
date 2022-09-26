@@ -9,21 +9,63 @@
 /* Begin PBXBuildFile section */
 		FCD9FCEC28E1915B001968ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEB28E1915B001968ED /* AppDelegate.swift */; };
 		FCD9FCEE28E1915B001968ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCED28E1915B001968ED /* SceneDelegate.swift */; };
-		FCD9FCF028E1915B001968ED /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEF28E1915B001968ED /* ViewController.swift */; };
+		FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEF28E1915B001968ED /* MoviesViewController.swift */; };
 		FCD9FCF328E1915B001968ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCD9FCF128E1915B001968ED /* Main.storyboard */; };
 		FCD9FCF528E1915E001968ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCD9FCF428E1915E001968ED /* Assets.xcassets */; };
 		FCD9FCF828E1915E001968ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCD9FCF628E1915E001968ED /* LaunchScreen.storyboard */; };
+		FCD9FD1F28E192DF001968ED /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD1E28E192DF001968ED /* UIViewController+Extension.swift */; };
+		FCD9FD2128E192FB001968ED /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2028E192FB001968ED /* UIImageView+Extension.swift */; };
+		FCD9FD2328E19315001968ED /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2228E19315001968ED /* UINavigationController+Extension.swift */; };
+		FCD9FD2528E19330001968ED /* UICollectionViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2428E19330001968ED /* UICollectionViewCell+Extension.swift */; };
+		FCD9FD2728E1934D001968ED /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2628E1934D001968ED /* String+Extension.swift */; };
+		FCD9FD2928E1936B001968ED /* CollectionCellDequeueable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2828E1936B001968ED /* CollectionCellDequeueable.swift */; };
+		FCD9FD2B28E1937B001968ED /* CollectionCellRegistable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2A28E1937B001968ED /* CollectionCellRegistable.swift */; };
+		FCD9FD2D28E19390001968ED /* CellIdentifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2C28E19390001968ED /* CellIdentifying.swift */; };
+		FCD9FD3028E193C3001968ED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD2F28E193C3001968ED /* Constants.swift */; };
+		FCD9FD3228E193D7001968ED /* BaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3128E193D7001968ED /* BaseRouter.swift */; };
+		FCD9FD3428E193F5001968ED /* BaseNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3328E193F5001968ED /* BaseNetworkService.swift */; };
+		FCD9FD3628E19409001968ED /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3528E19409001968ED /* BaseCollectionViewCell.swift */; };
+		FCD9FD3828E1941B001968ED /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3728E1941B001968ED /* EndPoint.swift */; };
+		FCD9FD3A28E19434001968ED /* DefaultMoviesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3928E19434001968ED /* DefaultMoviesAssembly.swift */; };
+		FCD9FD3C28E19445001968ED /* MoviesAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3B28E19445001968ED /* MoviesAPIService.swift */; };
+		FCD9FD3E28E19457001968ED /* DefaultMoviesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3D28E19457001968ED /* DefaultMoviesRouter.swift */; };
+		FCD9FD4028E1947E001968ED /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3F28E1947E001968ED /* Model.swift */; };
+		FCD9FD4328E194C7001968ED /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD4128E194C7001968ED /* CollectionViewCell.swift */; };
+		FCD9FD4428E194C7001968ED /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FCD9FD4228E194C7001968ED /* CollectionViewCell.xib */; };
+		FCD9FD4628E194FD001968ED /* MoviesViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD4528E194FD001968ED /* MoviesViewPresenter.swift */; };
+		FCD9FD4A28E19568001968ED /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FD4928E19568001968ED /* Alamofire */; };
+		FCD9FD4D28E1957B001968ED /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FD4C28E1957B001968ED /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		FCD9FCE828E1915B001968ED /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD9FCEB28E1915B001968ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD9FCED28E1915B001968ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FCD9FCEF28E1915B001968ED /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FCD9FCEF28E1915B001968ED /* MoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewController.swift; sourceTree = "<group>"; };
 		FCD9FCF228E1915B001968ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FCD9FCF428E1915E001968ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FCD9FCF728E1915E001968ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FCD9FCF928E1915E001968ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FCD9FD1E28E192DF001968ED /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		FCD9FD2028E192FB001968ED /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
+		FCD9FD2228E19315001968ED /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
+		FCD9FD2428E19330001968ED /* UICollectionViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewCell+Extension.swift"; sourceTree = "<group>"; };
+		FCD9FD2628E1934D001968ED /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		FCD9FD2828E1936B001968ED /* CollectionCellDequeueable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCellDequeueable.swift; sourceTree = "<group>"; };
+		FCD9FD2A28E1937B001968ED /* CollectionCellRegistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCellRegistable.swift; sourceTree = "<group>"; };
+		FCD9FD2C28E19390001968ED /* CellIdentifying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellIdentifying.swift; sourceTree = "<group>"; };
+		FCD9FD2F28E193C3001968ED /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		FCD9FD3128E193D7001968ED /* BaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRouter.swift; sourceTree = "<group>"; };
+		FCD9FD3328E193F5001968ED /* BaseNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNetworkService.swift; sourceTree = "<group>"; };
+		FCD9FD3528E19409001968ED /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
+		FCD9FD3728E1941B001968ED /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
+		FCD9FD3928E19434001968ED /* DefaultMoviesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMoviesAssembly.swift; sourceTree = "<group>"; };
+		FCD9FD3B28E19445001968ED /* MoviesAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesAPIService.swift; sourceTree = "<group>"; };
+		FCD9FD3D28E19457001968ED /* DefaultMoviesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMoviesRouter.swift; sourceTree = "<group>"; };
+		FCD9FD3F28E1947E001968ED /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		FCD9FD4128E194C7001968ED /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		FCD9FD4228E194C7001968ED /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
+		FCD9FD4528E194FD001968ED /* MoviesViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +73,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCD9FD4D28E1957B001968ED /* Kingfisher in Frameworks */,
+				FCD9FD4A28E19568001968ED /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,15 +100,123 @@
 		FCD9FCEA28E1915B001968ED /* Movies */ = {
 			isa = PBXGroup;
 			children = (
-				FCD9FCEB28E1915B001968ED /* AppDelegate.swift */,
-				FCD9FCED28E1915B001968ED /* SceneDelegate.swift */,
-				FCD9FCEF28E1915B001968ED /* ViewController.swift */,
-				FCD9FCF128E1915B001968ED /* Main.storyboard */,
-				FCD9FCF428E1915E001968ED /* Assets.xcassets */,
-				FCD9FCF628E1915E001968ED /* LaunchScreen.storyboard */,
+				FCD9FD4728E1951B001968ED /* Support */,
+				FCD9FD2E28E193B0001968ED /* New Group */,
+				FCD9FD1D28E1929E001968ED /* Application */,
+				FCD9FD1A28E19276001968ED /* Extensions */,
+				FCD9FD1B28E1927F001968ED /* Protocols */,
+				FCD9FD1C28E19287001968ED /* BaseServices */,
+				FCD9FCFF28E191BB001968ED /* Modules */,
 				FCD9FCF928E1915E001968ED /* Info.plist */,
 			);
 			path = Movies;
+			sourceTree = "<group>";
+		};
+		FCD9FCFF28E191BB001968ED /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD1528E1924B001968ED /* Movies */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		FCD9FD1528E1924B001968ED /* Movies */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD1928E1926A001968ED /* Model */,
+				FCD9FD1828E19262001968ED /* View */,
+				FCD9FD1628E19252001968ED /* Presenter */,
+				FCD9FD3928E19434001968ED /* DefaultMoviesAssembly.swift */,
+				FCD9FD3B28E19445001968ED /* MoviesAPIService.swift */,
+				FCD9FD3D28E19457001968ED /* DefaultMoviesRouter.swift */,
+			);
+			path = Movies;
+			sourceTree = "<group>";
+		};
+		FCD9FD1628E19252001968ED /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD4528E194FD001968ED /* MoviesViewPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		FCD9FD1828E19262001968ED /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FCEF28E1915B001968ED /* MoviesViewController.swift */,
+				FCD9FCF128E1915B001968ED /* Main.storyboard */,
+				FCD9FD4128E194C7001968ED /* CollectionViewCell.swift */,
+				FCD9FD4228E194C7001968ED /* CollectionViewCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FCD9FD1928E1926A001968ED /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD3F28E1947E001968ED /* Model.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		FCD9FD1A28E19276001968ED /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD1E28E192DF001968ED /* UIViewController+Extension.swift */,
+				FCD9FD2028E192FB001968ED /* UIImageView+Extension.swift */,
+				FCD9FD2228E19315001968ED /* UINavigationController+Extension.swift */,
+				FCD9FD2428E19330001968ED /* UICollectionViewCell+Extension.swift */,
+				FCD9FD2628E1934D001968ED /* String+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FCD9FD1B28E1927F001968ED /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD2828E1936B001968ED /* CollectionCellDequeueable.swift */,
+				FCD9FD2A28E1937B001968ED /* CollectionCellRegistable.swift */,
+				FCD9FD2C28E19390001968ED /* CellIdentifying.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		FCD9FD1C28E19287001968ED /* BaseServices */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FD2F28E193C3001968ED /* Constants.swift */,
+				FCD9FD3128E193D7001968ED /* BaseRouter.swift */,
+				FCD9FD3328E193F5001968ED /* BaseNetworkService.swift */,
+				FCD9FD3528E19409001968ED /* BaseCollectionViewCell.swift */,
+				FCD9FD3728E1941B001968ED /* EndPoint.swift */,
+			);
+			path = BaseServices;
+			sourceTree = "<group>";
+		};
+		FCD9FD1D28E1929E001968ED /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FCED28E1915B001968ED /* SceneDelegate.swift */,
+				FCD9FCEB28E1915B001968ED /* AppDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		FCD9FD2E28E193B0001968ED /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		FCD9FD4728E1951B001968ED /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FCF428E1915E001968ED /* Assets.xcassets */,
+				FCD9FCF628E1915E001968ED /* LaunchScreen.storyboard */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +235,10 @@
 			dependencies = (
 			);
 			name = Movies;
+			packageProductDependencies = (
+				FCD9FD4928E19568001968ED /* Alamofire */,
+				FCD9FD4C28E1957B001968ED /* Kingfisher */,
+			);
 			productName = Movies;
 			productReference = FCD9FCE828E1915B001968ED /* Movies.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +267,10 @@
 				Base,
 			);
 			mainGroup = FCD9FCDF28E1915B001968ED;
+			packageReferences = (
+				FCD9FD4828E19568001968ED /* XCRemoteSwiftPackageReference "Alamofire" */,
+				FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = FCD9FCE928E1915B001968ED /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,6 +287,7 @@
 			files = (
 				FCD9FCF828E1915E001968ED /* LaunchScreen.storyboard in Resources */,
 				FCD9FCF528E1915E001968ED /* Assets.xcassets in Resources */,
+				FCD9FD4428E194C7001968ED /* CollectionViewCell.xib in Resources */,
 				FCD9FCF328E1915B001968ED /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,9 +299,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FCD9FCF028E1915B001968ED /* ViewController.swift in Sources */,
+				FCD9FD3E28E19457001968ED /* DefaultMoviesRouter.swift in Sources */,
+				FCD9FD2728E1934D001968ED /* String+Extension.swift in Sources */,
+				FCD9FD2D28E19390001968ED /* CellIdentifying.swift in Sources */,
+				FCD9FD2B28E1937B001968ED /* CollectionCellRegistable.swift in Sources */,
+				FCD9FD3428E193F5001968ED /* BaseNetworkService.swift in Sources */,
+				FCD9FD2128E192FB001968ED /* UIImageView+Extension.swift in Sources */,
+				FCD9FD4628E194FD001968ED /* MoviesViewPresenter.swift in Sources */,
+				FCD9FD3628E19409001968ED /* BaseCollectionViewCell.swift in Sources */,
+				FCD9FD1F28E192DF001968ED /* UIViewController+Extension.swift in Sources */,
+				FCD9FD2528E19330001968ED /* UICollectionViewCell+Extension.swift in Sources */,
+				FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */,
+				FCD9FD3C28E19445001968ED /* MoviesAPIService.swift in Sources */,
+				FCD9FD3228E193D7001968ED /* BaseRouter.swift in Sources */,
+				FCD9FD3A28E19434001968ED /* DefaultMoviesAssembly.swift in Sources */,
+				FCD9FD3828E1941B001968ED /* EndPoint.swift in Sources */,
+				FCD9FD2928E1936B001968ED /* CollectionCellDequeueable.swift in Sources */,
+				FCD9FD4028E1947E001968ED /* Model.swift in Sources */,
 				FCD9FCEC28E1915B001968ED /* AppDelegate.swift in Sources */,
+				FCD9FD4328E194C7001968ED /* CollectionViewCell.swift in Sources */,
 				FCD9FCEE28E1915B001968ED /* SceneDelegate.swift in Sources */,
+				FCD9FD2328E19315001968ED /* UINavigationController+Extension.swift in Sources */,
+				FCD9FD3028E193C3001968ED /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +542,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FCD9FD4828E19568001968ED /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FCD9FD4928E19568001968ED /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCD9FD4828E19568001968ED /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		FCD9FD4C28E1957B001968ED /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FCD9FCE028E1915B001968ED /* Project object */;
 }
