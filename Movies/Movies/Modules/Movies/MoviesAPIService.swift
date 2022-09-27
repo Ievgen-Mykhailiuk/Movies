@@ -13,10 +13,10 @@ protocol MoviesNetworkService {
     func search(page: Int, text: String, completion: @escaping MoviesBlock)
 }
 
-class MoviesAPIService: BaseNetworkService, MoviesNetworkService {
+final class MoviesAPIService: BaseNetworkService, MoviesNetworkService {
     func search(page: Int, text: String, completion: @escaping MoviesBlock) {
         request(from: .search(page: page, text: text), httpMethod: .get) {
-            (result: Result<Response, Error>) in
+            (result: Result<MovieResponse, Error>) in
             switch result {
             case .success(let data):
                 completion(.success(data))
@@ -48,7 +48,7 @@ class MoviesAPIService: BaseNetworkService, MoviesNetworkService {
             endpoint = .trend(page: page)
         }
         request(from: endpoint, httpMethod: .get) {
-            (result: Result<Response, Error>) in
+            (result: Result<MovieResponse, Error>) in
             switch result {
             case .success(let data):
                 completion(.success(data))

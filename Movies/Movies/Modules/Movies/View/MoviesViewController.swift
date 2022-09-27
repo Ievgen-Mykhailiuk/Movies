@@ -117,7 +117,7 @@ final class MoviesViewController: UIViewController {
     }
     
     @objc private func showActionSheet() {
-        let sortMenuController = UIAlertController(title: "Sorting",
+        let sortMenuController = UIAlertController(title: "Sort by",
                                                    message: nil,
                                                    preferredStyle: .actionSheet)
         let defaultAction = UIAlertAction(title: "popular",
@@ -134,7 +134,7 @@ final class MoviesViewController: UIViewController {
             self.presenter.fetchMovies(sort: self.currentSortType)
             self.collectionView.setContentOffset(.zero, animated: false)
         })
-        let trendAction = UIAlertAction(title: "trending this week",
+        let trendAction = UIAlertAction(title: "trending",
                                         style: .default,
                                         handler: { SortBlock in
             self.currentSortType = .byTrend
@@ -200,6 +200,10 @@ extension MoviesViewController: UICollectionViewDelegate {
         if indexPath.item == presenter.getItemsCount() - itemsLeftToNextPage {
             presenter.nextPage(sort: currentSortType)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.movieTapped(at: indexPath.item)
     }
 }
 

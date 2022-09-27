@@ -15,6 +15,7 @@ protocol MoviesPresenter {
     func nextPage(sort type: SortType)
     func search(text: String)
     func stopSearch()
+    func movieTapped(at index: Int)
 }
 
 enum SortType {
@@ -31,12 +32,12 @@ final class MoviesViewPresenter {
     private let router: DefaultMoviesRouter
     private var movies = [MovieModel]() {
         didSet {
-            self.view.update()
+            view.update()
         }
     }
     private var searchResults = [MovieModel]() {
         didSet {
-            self.view.update()
+            view.update()
         }
     }
     private var genres = [GenreModel]()
@@ -69,14 +70,16 @@ final class MoviesViewPresenter {
         let genres = item.genreIDS.compactMap { id in
             self.genres.first(where: { $0.id == id })?.name
         }
+        let releaseYear: String = .getYear(stringDate: item.releaseDate)
         let movie = MovieModel(genres: genres,
                                id: item.id,
-                               popularibty: item.popularity,
-                               posterPath: item.posterPath,
-                               releaseYear: getYear(from: item.releaseDate),
+                               popularity: item.popularity,
+                               posterPath: item.posterPath ?? .empty,
+                               releaseYear: releaseYear,
                                title: item.title,
                                voteAverage: item.voteAverage,
-                               voteCount: item.voteCount)
+                               voteCount: item.voteCount,
+                               overview: item.overview)
         return movie
     }
    
@@ -170,5 +173,10 @@ extension MoviesViewPresenter: MoviesPresenter {
         timer?.invalidate()
         searchIsActive = false
         searchResults = []
+    }
+    
+    func movieTapped(at index: Int) {
+        let movie = getMovie(for: index)
+        router.showDetails(movieID: movie.id)
     }
 }
