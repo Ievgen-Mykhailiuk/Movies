@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import YouTubePlayerKit
 
 protocol DetailsAssembly {
     func createDetailsModule(movieID: Int) -> UIViewController
+    func createTrailerModule(trailerID: String) -> YouTubePlayerViewController
 }
 
 final class DefaultDetailsAssembly: DetailsAssembly {
@@ -21,6 +23,14 @@ final class DefaultDetailsAssembly: DetailsAssembly {
                                              router: router,
                                              movieID: movieID)
         view.presenter = presenter
+        return view
+    }
+    
+    func createTrailerModule(trailerID: String) -> YouTubePlayerViewController {
+        let view = YouTubePlayerViewController(
+            source: .video(id: trailerID, startSeconds: nil, endSeconds: nil),
+            configuration: YouTubePlayer.Configuration()
+        )
         return view
     }
 }

@@ -14,31 +14,36 @@ protocol DetailsView: AnyObject {
 
 final class DetailsViewController: UIViewController {
     
-    @IBOutlet weak var posterImageView: UIImageView!
-    @IBOutlet weak var movieNameLabel: UILabel!
-    @IBOutlet weak var countryLabel: UILabel!
-    @IBOutlet weak var releaseYearLabel: UILabel!
-    @IBOutlet weak var genresLabel: UILabel!
-    @IBOutlet weak var trailerButton: UIButton!
-    @IBOutlet weak var rankLabel: UILabel!
-    @IBOutlet weak var votesCountLabel: UILabel!
-    @IBOutlet weak var overviewLabel: UILabel!
+    //MARK: - Outlets
+    @IBOutlet private weak var posterImageView: UIImageView!
+    @IBOutlet private weak var movieNameLabel: UILabel!
+    @IBOutlet private weak var countryLabel: UILabel!
+    @IBOutlet private weak var releaseYearLabel: UILabel!
+    @IBOutlet private weak var genresLabel: UILabel!
+    @IBOutlet private weak var trailerButton: UIButton!
+    @IBOutlet private weak var rankLabel: UILabel!
+    @IBOutlet private weak var votesCountLabel: UILabel!
+    @IBOutlet private weak var overviewLabel: UILabel!
     
+    //MARK: - Properties
     var presenter: DetailsPresenter!
     
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
     
+    //MARK: - Action
     @IBAction func trailerButtonTapped(_ sender: Any) {
-        
+        presenter.playButtonTapped()
     }
     
+    //MARK: - Private Methods
     private func setupNavigationBar(title: String) {
         self.title = title
     }
-    
+
     private func configure(movie: DetailModel?) {
         guard let movie = movie else { return }
         posterImageView.setImage(endPoint: .poster(path: movie.posterPath))
@@ -49,9 +54,15 @@ final class DetailsViewController: UIViewController {
         rankLabel.text = String(format: "%.1f", movie.voteAverage)
         votesCountLabel.text = String(movie.voteCount)
         overviewLabel.text = movie.overview
+        if movie.trailerID == nil {
+            trailerButton.isHidden = true
+        }  else {
+            trailerButton.isHidden = false
+        }
     }
 }
 
+//MARK: - DetailsViewProtocol
 extension DetailsViewController: DetailsView {
     func didFailWithError(error: String) {
         DispatchQueue.main.async {

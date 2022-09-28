@@ -15,8 +15,7 @@ enum EndPoint {
     case genres
     case search(page: Int, text: String)
     case details(movieID: Int)
-    case trailerPath(movieID: Int)
-    case trailer(movieID: String)
+    case trailerID(movieID: Int)
 }
 
 extension EndPoint {
@@ -25,12 +24,10 @@ extension EndPoint {
         components.scheme = "https"
         components.path = path
         switch self {
-        case .popular, .trend, .votes, .genres, .search, .details, .trailerPath:
+        case .popular, .trend, .votes, .genres, .search, .details, .trailerID:
             components.host = "api.themoviedb.org"
         case .poster:
             components.host = "image.tmdb.org"
-        case .trailer:
-            components.host = "www.youtube.com"
         }
         return components
     }
@@ -53,15 +50,12 @@ extension EndPoint {
             components.queryItems = [key, language, page]
         case .poster:
             return components.url
-        case .genres, .details, .trailerPath:
+        case .genres, .details, .trailerID:
             components.queryItems = [key, language]
         case .search(let page, let text):
             let query = URLQueryItem(name: "query", value: "\(text)")
             let page = URLQueryItem(name: "page", value: "\(page)")
             components.queryItems = [key, language, query, page]
-        case .trailer(let movieID):
-            let movieID = URLQueryItem(name: "v", value: "\(movieID)")
-            components.queryItems = [movieID]
         }
         return components.url
     }
@@ -80,15 +74,8 @@ extension EndPoint {
             return "/3/search/movie"
         case .details(let movieID):
             return "/3/movie/\(movieID)"
-        case .trailerPath(let movieID):
+        case .trailerID(let movieID):
             return "/3/movie/\(movieID)/videos"
-        case .trailer:
-            return "/watch"
         }
     }
 }
-
-//https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
-
-
-//https://www.youtube.com/watch?v=UgDySaTffdo

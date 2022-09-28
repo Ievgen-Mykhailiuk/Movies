@@ -41,6 +41,8 @@
 		FCD9FD5928E1A213001968ED /* DefaultDetailsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5828E1A213001968ED /* DefaultDetailsRouter.swift */; };
 		FCD9FD5B28E1A2FB001968ED /* DetailsAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5A28E1A2FB001968ED /* DetailsAPIService.swift */; };
 		FCD9FD5D28E1B6BB001968ED /* Details.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5C28E1B6BA001968ED /* Details.swift */; };
+		FCD9FD6328E31DA4001968ED /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FD6228E31DA4001968ED /* XCDYouTubeKit */; };
+		FCD9FD6628E336EE001968ED /* YouTubePlayerKit in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FD6528E336EE001968ED /* YouTubePlayerKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +89,8 @@
 			files = (
 				FCD9FD4D28E1957B001968ED /* Kingfisher in Frameworks */,
 				FCD9FD4A28E19568001968ED /* Alamofire in Frameworks */,
+				FCD9FD6628E336EE001968ED /* YouTubePlayerKit in Frameworks */,
+				FCD9FD6328E31DA4001968ED /* XCDYouTubeKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +292,8 @@
 			packageProductDependencies = (
 				FCD9FD4928E19568001968ED /* Alamofire */,
 				FCD9FD4C28E1957B001968ED /* Kingfisher */,
+				FCD9FD6228E31DA4001968ED /* XCDYouTubeKit */,
+				FCD9FD6528E336EE001968ED /* YouTubePlayerKit */,
 			);
 			productName = Movies;
 			productReference = FCD9FCE828E1915B001968ED /* Movies.app */;
@@ -320,6 +326,8 @@
 			packageReferences = (
 				FCD9FD4828E19568001968ED /* XCRemoteSwiftPackageReference "Alamofire" */,
 				FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				FCD9FD6128E31DA4001968ED /* XCRemoteSwiftPackageReference "XCDYouTubeKit" */,
+				FCD9FD6428E336EE001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 			);
 			productRefGroup = FCD9FCE928E1915B001968ED /* Products */;
 			projectDirPath = "";
@@ -616,6 +624,22 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		FCD9FD6128E31DA4001968ED /* XCRemoteSwiftPackageReference "XCDYouTubeKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/0xced/XCDYouTubeKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		FCD9FD6428E336EE001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SvenTiigi/YouTubePlayerKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -628,6 +652,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		FCD9FD6228E31DA4001968ED /* XCDYouTubeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCD9FD6128E31DA4001968ED /* XCRemoteSwiftPackageReference "XCDYouTubeKit" */;
+			productName = XCDYouTubeKit;
+		};
+		FCD9FD6528E336EE001968ED /* YouTubePlayerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCD9FD6428E336EE001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */;
+			productName = YouTubePlayerKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

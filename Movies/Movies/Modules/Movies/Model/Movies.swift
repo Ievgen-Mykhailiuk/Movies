@@ -7,11 +7,23 @@
 
 import Foundation
 
+struct MovieModel {
+    let genres: [String]
+    let id: Int
+    let popularity: Double
+    let posterPath: String
+    let releaseYear: String
+    let title: String
+    let voteAverage: Double
+    let voteCount: Int
+    let overview: String
+}
+
 struct MovieResponse: Decodable {
     let page: Int
     let results: [MovieData]
     let totalPages, totalResults: Int
-
+    
     private enum CodingKeys: String, CodingKey {
         case page, results
         case totalPages = "total_pages"
@@ -28,7 +40,7 @@ struct MovieData: Decodable {
     let releaseDate, title: String
     let voteAverage: Double
     let voteCount: Int
-   
+    
     private enum CodingKeys: String, CodingKey {
         case genreIDS = "genre_ids"
         case id, overview
@@ -39,7 +51,7 @@ struct MovieData: Decodable {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
-    
+
     struct Countries: Decodable {
         let name: String
     }
@@ -48,22 +60,10 @@ struct MovieData: Decodable {
 struct Genres: Codable {
     let genres: [GenreModel]
 }
-    struct GenreModel: Codable {
-        let id: Int
-        let name: String
-    }
 
-
-struct MovieModel {
-    let genres: [String]
+struct GenreModel: Codable {
     let id: Int
-    let popularity: Double
-    let posterPath: String
-    let releaseYear: String
-    let title: String
-    let voteAverage: Double
-    let voteCount: Int
-    let overview: String
+    let name: String
 }
 
 

@@ -9,7 +9,7 @@ import Foundation
 
 protocol DetailsNetworkService {
     func fetchDetails(movieID: Int, completion: @escaping DetailsBlock)
-    func fetchTrailerPath(movieID: Int, completion: @escaping TrailerBlock)
+    func fetchTrailerID(movieID: Int, completion: @escaping TrailerBlock)
 }
 
 final class DetailsAPIService: BaseNetworkService, DetailsNetworkService {
@@ -24,8 +24,8 @@ final class DetailsAPIService: BaseNetworkService, DetailsNetworkService {
         }
     }
     
-    func fetchTrailerPath(movieID: Int, completion: @escaping TrailerBlock) {
-        request(from: .trailerPath(movieID: movieID), httpMethod: .get) { (result: Result<TrailerResponse, Error>) in
+    func fetchTrailerID(movieID: Int, completion: @escaping TrailerBlock) {
+        request(from: .trailerID(movieID: movieID), httpMethod: .get) { (result: Result<TrailerResponse, Error>) in
             switch result {
             case .success(let data):
                 completion(.success(data))
