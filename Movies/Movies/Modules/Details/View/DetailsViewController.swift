@@ -31,6 +31,8 @@ final class DetailsViewController: UIViewController {
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        trailerButton.isHidden = true
+        setupPosterView()
         presenter.viewDidLoad()
     }
     
@@ -43,10 +45,21 @@ final class DetailsViewController: UIViewController {
     private func setupNavigationBar(title: String) {
         self.title = title
     }
-
+    
+    
+    func setupPosterView() {
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+        posterImageView.isUserInteractionEnabled = true
+        posterImageView.addGestureRecognizer(recognizer)
+    }
+    
+    @objc func imageTapped(_: UITapGestureRecognizer) {
+        presenter.posterTapped()
+    }
+    
     private func configure(movie: DetailModel?) {
         guard let movie = movie else { return }
-        posterImageView.setImage(endPoint: .poster(path: movie.posterPath))
+        posterImageView.setImage(size: .full, endPoint: .poster(path: movie.posterPath))
         countryLabel.text = movie.countries.joined(separator: ", ")
         movieNameLabel.text = movie.title
         genresLabel.text = movie.genres.joined(separator: ", ")

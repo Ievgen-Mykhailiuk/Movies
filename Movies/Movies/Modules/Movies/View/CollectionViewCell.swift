@@ -25,7 +25,7 @@ final class CollectionViewCell: BaseCollectionViewCell {
     func configure(movie: MovieModel) {
         titleLabel.text = movie.title
         releaseYearLabel.text = movie.releaseYear
-        posterImageView.setImage(endPoint: .poster(path: movie.posterPath))
+        posterImageView.setImage(size: .small, endPoint: .poster(path: movie.posterPath))
         genresTotalLabel.text = movie.genres.joined(separator: ", ")
         rankLabel.text = String(format: "%.1f", movie.voteAverage)
         votesCountLabel.text = String(movie.voteCount)

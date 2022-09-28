@@ -10,6 +10,7 @@ import Foundation
 protocol DetailsPresenter {
     func viewDidLoad()
     func playButtonTapped()
+    func posterTapped()
 }
 
 final class DetailsViewPresenter {
@@ -49,9 +50,10 @@ final class DetailsViewPresenter {
         return model
     }
     
-    private func getData() {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
+    private func getDetails() {
+        let group = DispatchGroup()
+        group.enter()
+        group.enter()
         apiManager.fetchDetails(movieID: movieID) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -60,10 +62,8 @@ final class DetailsViewPresenter {
             case .failure(let error):
                 self.view.didFailWithError(error: error.localizedDescription)
             }
-            dispatchGroup.leave()
+            group.leave()
         }
-        
-        dispatchGroup.enter()
         apiManager.fetchTrailerID(movieID: movieID) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -73,10 +73,9 @@ final class DetailsViewPresenter {
             case .failure(let error):
                 self.view.didFailWithError(error: error.localizedDescription)
             }
-            dispatchGroup.leave()
+            group.leave()
         }
-        
-        dispatchGroup.notify(queue: .main) {
+        group.notify(queue: .main) {
             self.view.showDetails(movie: self.movie)
         }
     }
@@ -84,12 +83,17 @@ final class DetailsViewPresenter {
 
 //MARK: - DetailsPresenterProtocol
 extension DetailsViewPresenter: DetailsPresenter {
+    func viewDidLoad() {
+        getDetails()
+    }
+    
     func playButtonTapped() {
         guard let trailerID = movie?.trailerID else { return }
         router.showTrailer(trailerID: trailerID)
     }
     
-    func viewDidLoad() {
-        getData()
+    func posterTapped() {
+        guard let movie = movie else { return }
+        router.showFullSizePoster(with: movie.posterPath)
     }
 }

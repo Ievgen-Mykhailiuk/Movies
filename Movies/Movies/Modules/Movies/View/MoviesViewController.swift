@@ -52,6 +52,7 @@ final class MoviesViewController: UIViewController {
     
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
+        searchBar.showsBookmarkButton = false
         return searchBar
     }()
     
@@ -219,5 +220,15 @@ extension MoviesViewController: UISearchBarDelegate {
         collectionView.setContentOffset(.zero, animated: false)
         presenter.search(text: searchText)
     }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+    }
 }
 
+//MARK: - UIScrollViewDelegate
+extension MoviesViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.endEditing(true)
+    }
+}

@@ -9,7 +9,14 @@ import UIKit
 import Kingfisher
 
 extension UIImageView {
-    func setImage(endPoint: EndPoint,
+    
+    enum Size {
+        case small
+        case full
+    }
+    
+    func setImage(size: Size,
+                  endPoint: EndPoint,
                   placeholder: UIImage? = nil,
                   completion: ImageBlock? = nil) {
         guard let url = endPoint.url else {
@@ -17,7 +24,15 @@ extension UIImageView {
             return
         }
         self.kf.indicatorType = .activity
-        let processor = DownsamplingImageProcessor(size: CGSize(width: 200, height: 350))
+       
+        var processor: ImageProcessor
+        switch size {
+        case .small:
+            processor = DownsamplingImageProcessor(size: CGSize(width: 200, height: 350))
+        case .full:
+            processor = DefaultImageProcessor()
+        }
+
         self.kf.setImage(with: url,
                          placeholder: placeholder,
                          options: [.fromMemoryCacheOrRefresh, .processor(processor)],

@@ -82,7 +82,7 @@ final class MoviesViewPresenter {
                                overview: item.overview)
         return movie
     }
-   
+    
     private func getYear(from date: String) -> Int {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -115,10 +115,10 @@ extension MoviesViewPresenter: MoviesPresenter {
     }
     
     func getMovie(for index: Int) -> MovieModel {
-         if searchIsActive {
-            return searchResults[index]
-        } else {
+        if searchResults.isEmpty {
             return movies[index]
+        } else {
+            return searchResults[index]
         }
     }
     
