@@ -7,6 +7,7 @@
 
 import Foundation
 
+//MARK: - UI Details Model
 struct DetailModel {
     let genres: [String]
     let posterPath: String
@@ -14,11 +15,12 @@ struct DetailModel {
     let title: String
     let voteAverage: Double
     let voteCount: Int
-    var trailerID: String?
+    var trailerID: String? = nil
     let countries: [String]
     let overview: String
 }
 
+//MARK: - Response Data Model
 struct DetailsData: Decodable {
     let genres: [Genre]
     let overview: String
@@ -41,14 +43,14 @@ struct DetailsData: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.genres = try container.decode([Genre].self, forKey: .genres)
-        self.overview = try container.decode(String.self, forKey: .overview)
-        self.countries = try container.decode([ProductionCountry].self, forKey: .countries)
+        self.genres = try container.decodeIfPresent([Genre].self, forKey: .genres) ?? []
+        self.overview = try container.decodeIfPresent(String.self, forKey: .overview) ?? .empty
+        self.countries = try container.decodeIfPresent([ProductionCountry].self, forKey: .countries) ?? []
         self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath) ?? .empty
-        self.releaseDate = try container.decode(String.self, forKey: .releaseDate)
-        self.title = try container.decode(String.self, forKey: .title)
-        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
-        self.voteCount = try container.decode(Int.self, forKey: .voteCount)
+        self.releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate) ?? .empty
+        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? .empty
+        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? .zero
+        self.voteCount = try container.decodeIfPresent(Int.self, forKey: .voteCount) ?? .zero
     }
     
     struct Genre: Decodable {
@@ -65,7 +67,7 @@ struct TrailerResponse: Decodable {
     let id: Int
     let results: [Trailer]
     
-    struct Trailer: Codable {
+    struct Trailer: Decodable {
         let key: String
         let type: String
     }

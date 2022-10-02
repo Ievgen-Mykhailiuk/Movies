@@ -31,14 +31,18 @@ final class DetailsViewController: UIViewController {
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        trailerButton.isHidden = true
-        setupPosterView()
+        setupTrailerButton()
+        setRecognizer()
         presenter.viewDidLoad()
     }
     
-    //MARK: - Action
-    @IBAction func trailerButtonTapped(_ sender: Any) {
+    //MARK: - Actions
+    @IBAction private func trailerButtonTapped(_ sender: Any) {
         presenter.playButtonTapped()
+    }
+    
+    @objc private func imageTapped(_: UITapGestureRecognizer) {
+        presenter.posterTapped()
     }
     
     //MARK: - Private Methods
@@ -46,20 +50,20 @@ final class DetailsViewController: UIViewController {
         self.title = title
     }
     
+    private func setupTrailerButton() {
+        trailerButton.makeRounded()
+        trailerButton.isHidden = true
+    }
     
-    func setupPosterView() {
+    private func setRecognizer() {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         posterImageView.isUserInteractionEnabled = true
         posterImageView.addGestureRecognizer(recognizer)
     }
     
-    @objc func imageTapped(_: UITapGestureRecognizer) {
-        presenter.posterTapped()
-    }
-    
     private func configure(movie: DetailModel?) {
         guard let movie = movie else { return }
-        posterImageView.setImage(size: .full, endPoint: .poster(path: movie.posterPath))
+        posterImageView.setImage(size: .medium, endPoint: .poster(path: movie.posterPath))
         countryLabel.text = movie.countries.joined(separator: ", ")
         movieNameLabel.text = movie.title
         genresLabel.text = movie.genres.joined(separator: ", ")
@@ -67,9 +71,7 @@ final class DetailsViewController: UIViewController {
         rankLabel.text = String(format: "%.1f", movie.voteAverage)
         votesCountLabel.text = String(movie.voteCount)
         overviewLabel.text = movie.overview
-        if movie.trailerID == nil {
-            trailerButton.isHidden = true
-        }  else {
+        if movie.trailerID != nil {
             trailerButton.isHidden = false
         }
     }

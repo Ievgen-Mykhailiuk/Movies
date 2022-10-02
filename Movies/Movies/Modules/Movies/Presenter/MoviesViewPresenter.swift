@@ -6,16 +6,18 @@
 //
 
 import Foundation
+import UIKit
 
 protocol MoviesPresenter {
-    func viewDidLoad()
-    func fetchMovies(sort type: SortType)
+    func viewDidLoad(network: Bool)
+    func getMovies(sorted type: SortType)
     func getMovie(for index: Int) -> MovieModel
     func getItemsCount() -> Int
     func nextPage(sort type: SortType)
-    func search(text: String)
+    func search(text: String, network: Bool)
     func stopSearch()
     func movieTapped(at index: Int)
+    func save(movie: MovieModel, poster: UIImage?)
 }
 
 enum SortType {
@@ -28,7 +30,8 @@ final class MoviesViewPresenter {
     
     //MARK: - Properties
     private weak var view: MoviesView!
-    private let apiManager: MoviesAPIService
+    private let networkManager: MoviesNetworkManager
+    private let dataBaseManager: CoreDataService
     private let router: DefaultMoviesRouter
     private var movies = [MovieModel]() {
         didSet {
@@ -47,21 +50,37 @@ final class MoviesViewPresenter {
     
     //MARK: - Life Cycle
     init(view: MoviesView,
-         apiManager: MoviesAPIService,
-         router: DefaultMoviesRouter) {
+         networkManager: MoviesNetworkManager,
+         dataBaseManager: CoreDataService,
+         router: DefaultMoviesRouter
+            ) {
         self.view = view
-        self.apiManager = apiManager
+        self.networkManager = networkManager
         self.router = router
+        self.dataBaseManager = dataBaseManager
     }
     
     //MARK: - Private mwethods
-    private func fetchGenres() {
-        apiManager.fetchGenres { result in
+    private func getGenres() {
+        networkManager.fetchGenres { result in
             switch result {
             case .success(let data):
                 self.genres = data.genres
             case .failure(let error):
                 print(error)
+            }
+        }
+    }
+    
+    private func getNetworkData() {
+        getGenres()
+        getMovies(sorted: .byDefault)
+    }
+    
+    private func getDataBaseData() {
+        dataBaseManager.getAllMovies { result in
+            if let movies = result {
+                self.movies = movies
             }
         }
     }
@@ -73,34 +92,53 @@ final class MoviesViewPresenter {
         let releaseYear: String = .getYear(stringDate: item.releaseDate)
         let movie = MovieModel(genres: genres,
                                id: item.id,
-                               popularity: item.popularity,
-                               posterPath: item.posterPath ?? .empty,
+                               popularity: String(item.popularity),
+                               posterPath: item.posterPath,
                                releaseYear: releaseYear,
                                title: item.title,
-                               voteAverage: item.voteAverage,
-                               voteCount: item.voteCount,
+                               votesAverage: String(item.votesAverage),
+                               votesCount: String(item.voteCount),
                                overview: item.overview)
         return movie
     }
     
-    private func getYear(from date: String) -> Int {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let releaseDate = formatter.date(from: date)  ?? Date()
-        return Calendar.current.component(.year, from: releaseDate)
+    private func localFilter(with text: String) {
+        searchIsActive = true
+        let filtred = self.movies.filter { $0.title.lowercased().contains(text.lowercased()) }
+        self.searchResults = filtred
+    }
+    
+    private func networkFilter(with text: String) {
+        page = 1
+        timer?.invalidate()
+        searchIsActive = true
+        timer = .scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+            guard let self = self else { return }
+            self.networkManager.search(page: self.page, text: text) { result in
+                switch result {
+                case .success(let data):
+                    let movies = data.results
+                        .filter { $0.title.lowercased().contains(text.lowercased()) }
+                        .map { item in self.convertToModel(item: item) }
+                    self.searchResults = movies
+                case .failure(let error):
+                    self.view.didFailWithError(error: error.localizedDescription)
+                }
+            }
+        }
     }
 }
 
 //MARK: - MoviesPresenterProtocol
 extension MoviesViewPresenter: MoviesPresenter {
-    func viewDidLoad() {
-        fetchGenres()
-        fetchMovies(sort: .byDefault)
+    func viewDidLoad(network: Bool) {
+        network ? getNetworkData() : getDataBaseData()
+//                dataBaseManager.deleteAll()
     }
     
-    func fetchMovies(sort type: SortType) {
+    func getMovies(sorted type: SortType) {
         page = 1
-        apiManager.fetch(page: page, sortType: type) { [weak self] result in
+        networkManager.fetch(page: page, sortType: type) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let data):
@@ -108,6 +146,7 @@ extension MoviesViewPresenter: MoviesPresenter {
                     self.convertToModel(item: item)
                 }
                 self.movies = movies
+//                self.dataBaseManager.saveMovies(movies: movies)
             case .failure(let error):
                 self.view.didFailWithError(error: error.localizedDescription)
             }
@@ -132,41 +171,26 @@ extension MoviesViewPresenter: MoviesPresenter {
     
     func nextPage(sort type: SortType) {
         page += 1
-        apiManager.fetch(page: page, sortType: type) { [weak self] result in
+        networkManager.fetch(page: page, sortType: type) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let data):
+                var movies = [MovieModel]()
                 data.results.forEach { item in
-                    self.searchIsActive ? self.searchResults.append(self.convertToModel(item: item)) : self.movies.append(self.convertToModel(item: item))
+                    movies.append(self.convertToModel(item: item))
                 }
+                self.searchIsActive ?
+                self.searchResults.append(contentsOf: movies) : self.movies.append(contentsOf: movies)
+//                self.dataBaseManager.saveMovies(movies: movies)
             case .failure(let error):
                 self.view.didFailWithError(error: error.localizedDescription)
             }
         }
     }
     
-    func search(text: String) {
-        if text.count >= 2 {
-            page = 1
-            timer?.invalidate()
-            searchIsActive = true
-            timer = .scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                guard let self = self else { return }
-                self.apiManager.search(page: self.page, text: text) { result in
-                    switch result {
-                    case .success(let data):
-                        let movies = data.results
-                            .filter { $0.title.lowercased().contains(text.lowercased()) }
-                            .map { item in self.convertToModel(item: item) }
-                        self.searchResults = movies
-                    case .failure(let error):
-                        self.view.didFailWithError(error: error.localizedDescription)
-                    }
-                }
-            }
-        } else {
-            stopSearch()
-        }
+    func search(text: String, network: Bool) {
+        network ?
+        networkFilter(with: text) : localFilter(with: text)
     }
     
     func stopSearch() {
@@ -178,5 +202,9 @@ extension MoviesViewPresenter: MoviesPresenter {
     func movieTapped(at index: Int) {
         let movie = getMovie(for: index)
         router.showDetails(movieID: movie.id)
+    }
+    
+    func save(movie: MovieModel, poster: UIImage?) {
+        dataBaseManager.saveMovie(movie: movie, poster: poster)
     }
 }

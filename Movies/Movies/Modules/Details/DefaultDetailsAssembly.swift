@@ -17,9 +17,9 @@ final class DefaultDetailsAssembly: DetailsAssembly {
     func createDetailsModule(movieID: Int) -> UIViewController {
         let view  = DetailsViewController.instantiateFromStoryboard()
         let router = DefaultDetailsRouter(viewController: view)
-        let apiManager = DetailsAPIService()
+        let networkManager = DetailsNetworkManager()
         let presenter = DetailsViewPresenter(view: view,
-                                             apiManager: apiManager,
+                                             networkManager: networkManager,
                                              router: router,
                                              movieID: movieID)
         view.presenter = presenter
@@ -29,8 +29,7 @@ final class DefaultDetailsAssembly: DetailsAssembly {
     func createTrailerModule(trailerID: String) -> YouTubePlayerViewController {
         let view = YouTubePlayerViewController(
             source: .video(id: trailerID, startSeconds: nil, endSeconds: nil),
-            configuration: YouTubePlayer.Configuration()
-        )
+            configuration: .init())
         return view
     }
 }

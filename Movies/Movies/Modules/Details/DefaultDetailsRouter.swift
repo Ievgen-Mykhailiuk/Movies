@@ -16,8 +16,8 @@ final class DefaultDetailsRouter: BaseRouter, DetailsRouter {
     func showTrailer(trailerID: String) {
         let viewController = DefaultDetailsAssembly().createTrailerModule(trailerID: trailerID)
         show(viewController: viewController,
-             isModal: true,
-             animated: true,
+             isModal: false,
+             animated: false,
              completion: nil)
     }
     

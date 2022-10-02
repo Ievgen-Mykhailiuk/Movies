@@ -14,9 +14,13 @@ protocol PostListAssembly {
 final class DefaultMoviesAssembly: PostListAssembly {
     func createMoviesModule() -> UIViewController {
         let view  = MoviesViewController.instantiateFromStoryboard()
-        let apiManager = MoviesAPIService()
+        let networkManager = MoviesNetworkManager()
+        let dataBaseManager = CoreDataService()
         let router = DefaultMoviesRouter(viewController: view)
-        let presenter = MoviesViewPresenter(view: view, apiManager: apiManager, router: router)
+        let presenter = MoviesViewPresenter(view: view,
+                                            networkManager: networkManager,
+                                            dataBaseManager: dataBaseManager,
+                                            router: router)
         view.presenter = presenter
         let navigationController = UINavigationController(rootViewController: view)
         return navigationController

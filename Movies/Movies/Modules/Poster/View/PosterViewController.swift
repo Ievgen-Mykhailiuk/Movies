@@ -47,7 +47,7 @@ final class PosterViewController: UIViewController {
     
     private func setupScrollView() {
         scrollView.frame = view.bounds
-        scrollView.maximumZoomScale = 4.0
+        scrollView.maximumZoomScale = 10.0
         scrollView.minimumZoomScale = 1.0
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
@@ -71,9 +71,7 @@ final class PosterViewController: UIViewController {
 //MARK: - PosterViewProtocol
 extension PosterViewController: PosterView {
     func showPoster(with path: String) {
-        DispatchQueue.main.async {
-            self.posterImageView.setImage(size: .full, endPoint: .poster(path: path))
-        }
+        self.posterImageView.setImage(size: .full, endPoint: .poster(path: path))
     }
 }
 

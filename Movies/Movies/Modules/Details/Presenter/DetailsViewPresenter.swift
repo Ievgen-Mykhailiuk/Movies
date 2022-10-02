@@ -17,18 +17,18 @@ final class DetailsViewPresenter {
     
     //MARK: - Properties
     private weak var view: DetailsView!
-    private let apiManager: DetailsAPIService
+    private let networkManager: DetailsNetworkManager
     private let router: DefaultDetailsRouter
     private let movieID: Int
     private var movie: DetailModel?
     
     //MARK: - Life Cycle
     init(view: DetailsView,
-         apiManager: DetailsAPIService,
+         networkManager: DetailsNetworkManager,
          router: DefaultDetailsRouter,
          movieID: Int) {
         self.view = view
-        self.apiManager = apiManager
+        self.networkManager = networkManager
         self.router = router
         self.movieID = movieID
     }
@@ -44,7 +44,6 @@ final class DetailsViewPresenter {
                                 title: item.title,
                                 voteAverage: item.voteAverage,
                                 voteCount: item.voteCount,
-                                trailerID: nil,
                                 countries: countries,
                                 overview: item.overview)
         return model
@@ -52,30 +51,40 @@ final class DetailsViewPresenter {
     
     private func getDetails() {
         let group = DispatchGroup()
+        
+        // fech details data
         group.enter()
-        group.enter()
-        apiManager.fetchDetails(movieID: movieID) { [weak self] result in
+        networkManager.fetchDetails(movieID: movieID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let data):
+                
+                // convert data to model
                 self.movie = self.convertToModel(item: data)
-            case .failure(let error):
-                self.view.didFailWithError(error: error.localizedDescription)
-            }
-            group.leave()
-        }
-        apiManager.fetchTrailerID(movieID: movieID) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let data):
-                let trailer = data.results.first(where: { $0.type.lowercased() == "trailer" })
-                self.movie?.trailerID = trailer?.key
+                
+                // fetch trailer ID for movie
+                group.enter()
+                self.networkManager.fetchTrailerID(movieID: self.movieID) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let data):
+                        let trailer = data.results.first(where: { $0.type.lowercased() == "trailer" })
+                        
+                        // save trailerID
+                        self.movie?.trailerID = trailer?.key
+                    case .failure(let error):
+                        self.view.didFailWithError(error: error.localizedDescription)
+                    }
+                    group.leave()
+                }
             case .failure(let error):
                 self.view.didFailWithError(error: error.localizedDescription)
             }
             group.leave()
         }
         group.notify(queue: .main) {
+            
+            // send model to show
             self.view.showDetails(movie: self.movie)
         }
     }

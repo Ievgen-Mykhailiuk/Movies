@@ -27,7 +27,7 @@
 		FCD9FD3628E19409001968ED /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3528E19409001968ED /* BaseCollectionViewCell.swift */; };
 		FCD9FD3828E1941B001968ED /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3728E1941B001968ED /* EndPoint.swift */; };
 		FCD9FD3A28E19434001968ED /* DefaultMoviesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3928E19434001968ED /* DefaultMoviesAssembly.swift */; };
-		FCD9FD3C28E19445001968ED /* MoviesAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3B28E19445001968ED /* MoviesAPIService.swift */; };
+		FCD9FD3C28E19445001968ED /* MoviesNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3B28E19445001968ED /* MoviesNetworkManager.swift */; };
 		FCD9FD3E28E19457001968ED /* DefaultMoviesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3D28E19457001968ED /* DefaultMoviesRouter.swift */; };
 		FCD9FD4028E1947E001968ED /* Movies.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD3F28E1947E001968ED /* Movies.swift */; };
 		FCD9FD4328E194C7001968ED /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD4128E194C7001968ED /* CollectionViewCell.swift */; };
@@ -39,14 +39,18 @@
 		FCD9FD5528E196DD001968ED /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5428E196DD001968ED /* DetailsViewController.swift */; };
 		FCD9FD5728E1A1CF001968ED /* DefaultDetailsAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5628E1A1CF001968ED /* DefaultDetailsAssembly.swift */; };
 		FCD9FD5928E1A213001968ED /* DefaultDetailsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5828E1A213001968ED /* DefaultDetailsRouter.swift */; };
-		FCD9FD5B28E1A2FB001968ED /* DetailsAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5A28E1A2FB001968ED /* DetailsAPIService.swift */; };
+		FCD9FD5B28E1A2FB001968ED /* DetailsNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5A28E1A2FB001968ED /* DetailsNetworkManager.swift */; };
 		FCD9FD5D28E1B6BB001968ED /* Details.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD5C28E1B6BA001968ED /* Details.swift */; };
-		FCD9FD6328E31DA4001968ED /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FD6228E31DA4001968ED /* XCDYouTubeKit */; };
 		FCD9FD6628E336EE001968ED /* YouTubePlayerKit in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FD6528E336EE001968ED /* YouTubePlayerKit */; };
 		FCD9FD6828E4438A001968ED /* PosterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD6728E4438A001968ED /* PosterViewController.swift */; };
 		FCD9FD6D28E44987001968ED /* PosterViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD6C28E44987001968ED /* PosterViewPresenter.swift */; };
 		FCD9FD7128E44A4E001968ED /* DefaultPosterRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD7028E44A4E001968ED /* DefaultPosterRouter.swift */; };
 		FCD9FD7328E44A60001968ED /* DefaultPosterAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD7228E44A60001968ED /* DefaultPosterAssembly.swift */; };
+		FCD9FD7528E483DF001968ED /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD7428E483DF001968ED /* UIView+Extension.swift */; };
+		FCD9FD7728E6D979001968ED /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FD7628E6D979001968ED /* CoreDataService.swift */; };
+		FCD9FDA828E6DE1C001968ED /* DataBase.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FDA628E6DE1C001968ED /* DataBase.xcdatamodeld */; };
+		FCD9FDBF28E9E9DF001968ED /* MovieEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FDBD28E9E9DF001968ED /* MovieEntity+CoreDataClass.swift */; };
+		FCD9FDC028E9E9DF001968ED /* MovieEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FDBE28E9E9DF001968ED /* MovieEntity+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,7 +76,7 @@
 		FCD9FD3528E19409001968ED /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		FCD9FD3728E1941B001968ED /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		FCD9FD3928E19434001968ED /* DefaultMoviesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMoviesAssembly.swift; sourceTree = "<group>"; };
-		FCD9FD3B28E19445001968ED /* MoviesAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesAPIService.swift; sourceTree = "<group>"; };
+		FCD9FD3B28E19445001968ED /* MoviesNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesNetworkManager.swift; sourceTree = "<group>"; };
 		FCD9FD3D28E19457001968ED /* DefaultMoviesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMoviesRouter.swift; sourceTree = "<group>"; };
 		FCD9FD3F28E1947E001968ED /* Movies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movies.swift; sourceTree = "<group>"; };
 		FCD9FD4128E194C7001968ED /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
@@ -82,12 +86,17 @@
 		FCD9FD5428E196DD001968ED /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		FCD9FD5628E1A1CF001968ED /* DefaultDetailsAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDetailsAssembly.swift; sourceTree = "<group>"; };
 		FCD9FD5828E1A213001968ED /* DefaultDetailsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDetailsRouter.swift; sourceTree = "<group>"; };
-		FCD9FD5A28E1A2FB001968ED /* DetailsAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsAPIService.swift; sourceTree = "<group>"; };
+		FCD9FD5A28E1A2FB001968ED /* DetailsNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsNetworkManager.swift; sourceTree = "<group>"; };
 		FCD9FD5C28E1B6BA001968ED /* Details.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Details.swift; sourceTree = "<group>"; };
 		FCD9FD6728E4438A001968ED /* PosterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterViewController.swift; sourceTree = "<group>"; };
 		FCD9FD6C28E44987001968ED /* PosterViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterViewPresenter.swift; sourceTree = "<group>"; };
 		FCD9FD7028E44A4E001968ED /* DefaultPosterRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPosterRouter.swift; sourceTree = "<group>"; };
 		FCD9FD7228E44A60001968ED /* DefaultPosterAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPosterAssembly.swift; sourceTree = "<group>"; };
+		FCD9FD7428E483DF001968ED /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		FCD9FD7628E6D979001968ED /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
+		FCD9FDA728E6DE1C001968ED /* DataBase.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataBase.xcdatamodel; sourceTree = "<group>"; };
+		FCD9FDBD28E9E9DF001968ED /* MovieEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovieEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		FCD9FDBE28E9E9DF001968ED /* MovieEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovieEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +107,6 @@
 				FCD9FD4D28E1957B001968ED /* Kingfisher in Frameworks */,
 				FCD9FD4A28E19568001968ED /* Alamofire in Frameworks */,
 				FCD9FD6628E336EE001968ED /* YouTubePlayerKit in Frameworks */,
-				FCD9FD6328E31DA4001968ED /* XCDYouTubeKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,8 +132,8 @@
 		FCD9FCEA28E1915B001968ED /* Movies */ = {
 			isa = PBXGroup;
 			children = (
+				FCD9FDC128EA028E001968ED /* CoreData */,
 				FCD9FD4728E1951B001968ED /* Support */,
-				FCD9FD2E28E193B0001968ED /* New Group */,
 				FCD9FD1D28E1929E001968ED /* Application */,
 				FCD9FD1A28E19276001968ED /* Extensions */,
 				FCD9FD1B28E1927F001968ED /* Protocols */,
@@ -153,7 +161,7 @@
 				FCD9FD1828E19262001968ED /* View */,
 				FCD9FD1628E19252001968ED /* Presenter */,
 				FCD9FD3928E19434001968ED /* DefaultMoviesAssembly.swift */,
-				FCD9FD3B28E19445001968ED /* MoviesAPIService.swift */,
+				FCD9FD3B28E19445001968ED /* MoviesNetworkManager.swift */,
 				FCD9FD3D28E19457001968ED /* DefaultMoviesRouter.swift */,
 			);
 			path = Movies;
@@ -194,6 +202,7 @@
 				FCD9FD2228E19315001968ED /* UINavigationController+Extension.swift */,
 				FCD9FD2428E19330001968ED /* UICollectionViewCell+Extension.swift */,
 				FCD9FD2628E1934D001968ED /* String+Extension.swift */,
+				FCD9FD7428E483DF001968ED /* UIView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -229,13 +238,6 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		FCD9FD2E28E193B0001968ED /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		FCD9FD4728E1951B001968ED /* Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,7 +255,7 @@
 				FCD9FD4F28E19690001968ED /* Presenter */,
 				FCD9FD5628E1A1CF001968ED /* DefaultDetailsAssembly.swift */,
 				FCD9FD5828E1A213001968ED /* DefaultDetailsRouter.swift */,
-				FCD9FD5A28E1A2FB001968ED /* DetailsAPIService.swift */,
+				FCD9FD5A28E1A2FB001968ED /* DetailsNetworkManager.swift */,
 			);
 			path = Details;
 			sourceTree = "<group>";
@@ -309,6 +311,17 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		FCD9FDC128EA028E001968ED /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				FCD9FDBD28E9E9DF001968ED /* MovieEntity+CoreDataClass.swift */,
+				FCD9FDBE28E9E9DF001968ED /* MovieEntity+CoreDataProperties.swift */,
+				FCD9FDA628E6DE1C001968ED /* DataBase.xcdatamodeld */,
+				FCD9FD7628E6D979001968ED /* CoreDataService.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -328,7 +341,6 @@
 			packageProductDependencies = (
 				FCD9FD4928E19568001968ED /* Alamofire */,
 				FCD9FD4C28E1957B001968ED /* Kingfisher */,
-				FCD9FD6228E31DA4001968ED /* XCDYouTubeKit */,
 				FCD9FD6528E336EE001968ED /* YouTubePlayerKit */,
 			);
 			productName = Movies;
@@ -362,7 +374,6 @@
 			packageReferences = (
 				FCD9FD4828E19568001968ED /* XCRemoteSwiftPackageReference "Alamofire" */,
 				FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				FCD9FD6128E31DA4001968ED /* XCRemoteSwiftPackageReference "XCDYouTubeKit" */,
 				FCD9FD6428E336EE001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 			);
 			productRefGroup = FCD9FCE928E1915B001968ED /* Products */;
@@ -393,24 +404,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCD9FD7728E6D979001968ED /* CoreDataService.swift in Sources */,
+				FCD9FD7528E483DF001968ED /* UIView+Extension.swift in Sources */,
 				FCD9FD3E28E19457001968ED /* DefaultMoviesRouter.swift in Sources */,
 				FCD9FD2728E1934D001968ED /* String+Extension.swift in Sources */,
 				FCD9FD2D28E19390001968ED /* CellIdentifying.swift in Sources */,
 				FCD9FD2B28E1937B001968ED /* CollectionCellRegistable.swift in Sources */,
 				FCD9FD3428E193F5001968ED /* BaseNetworkService.swift in Sources */,
+				FCD9FDBF28E9E9DF001968ED /* MovieEntity+CoreDataClass.swift in Sources */,
 				FCD9FD5928E1A213001968ED /* DefaultDetailsRouter.swift in Sources */,
 				FCD9FD2128E192FB001968ED /* UIImageView+Extension.swift in Sources */,
 				FCD9FD5D28E1B6BB001968ED /* Details.swift in Sources */,
 				FCD9FD4628E194FD001968ED /* MoviesViewPresenter.swift in Sources */,
-				FCD9FD5B28E1A2FB001968ED /* DetailsAPIService.swift in Sources */,
+				FCD9FD5B28E1A2FB001968ED /* DetailsNetworkManager.swift in Sources */,
 				FCD9FD3628E19409001968ED /* BaseCollectionViewCell.swift in Sources */,
 				FCD9FD6828E4438A001968ED /* PosterViewController.swift in Sources */,
 				FCD9FD1F28E192DF001968ED /* UIViewController+Extension.swift in Sources */,
 				FCD9FD2528E19330001968ED /* UICollectionViewCell+Extension.swift in Sources */,
 				FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */,
+				FCD9FDA828E6DE1C001968ED /* DataBase.xcdatamodeld in Sources */,
 				FCD9FD7328E44A60001968ED /* DefaultPosterAssembly.swift in Sources */,
+				FCD9FDC028E9E9DF001968ED /* MovieEntity+CoreDataProperties.swift in Sources */,
 				FCD9FD5528E196DD001968ED /* DetailsViewController.swift in Sources */,
-				FCD9FD3C28E19445001968ED /* MoviesAPIService.swift in Sources */,
+				FCD9FD3C28E19445001968ED /* MoviesNetworkManager.swift in Sources */,
 				FCD9FD3228E193D7001968ED /* BaseRouter.swift in Sources */,
 				FCD9FD3A28E19434001968ED /* DefaultMoviesAssembly.swift in Sources */,
 				FCD9FD5728E1A1CF001968ED /* DefaultDetailsAssembly.swift in Sources */,
@@ -664,14 +680,6 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		FCD9FD6128E31DA4001968ED /* XCRemoteSwiftPackageReference "XCDYouTubeKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/0xced/XCDYouTubeKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		FCD9FD6428E336EE001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SvenTiigi/YouTubePlayerKit";
@@ -693,17 +701,25 @@
 			package = FCD9FD4B28E1957B001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
-		FCD9FD6228E31DA4001968ED /* XCDYouTubeKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FCD9FD6128E31DA4001968ED /* XCRemoteSwiftPackageReference "XCDYouTubeKit" */;
-			productName = XCDYouTubeKit;
-		};
 		FCD9FD6528E336EE001968ED /* YouTubePlayerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FCD9FD6428E336EE001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */;
 			productName = YouTubePlayerKit;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		FCD9FDA628E6DE1C001968ED /* DataBase.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FCD9FDA728E6DE1C001968ED /* DataBase.xcdatamodel */,
+			);
+			currentVersion = FCD9FDA728E6DE1C001968ED /* DataBase.xcdatamodel */;
+			path = DataBase.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FCD9FCE028E1915B001968ED /* Project object */;
 }

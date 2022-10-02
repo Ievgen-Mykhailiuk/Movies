@@ -17,4 +17,7 @@ typealias TrailerBlock = (Result<TrailerResponse, Error>) -> Void
 
 struct Constants {
     static let apiKey = "124f09c902f0aae1577860f06cebd903"
+    static let offlineMsg = "You are offline. Please enable your Wi-Fi or connect using cellular data"
+    static let smallPosterSize = CGSize(width: 230, height: 350)
+    static let mediumPosterSize = CGSize(width: 390, height: 520)
 }

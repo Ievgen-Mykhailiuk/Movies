@@ -12,6 +12,7 @@ extension UIImageView {
     
     enum Size {
         case small
+        case medium
         case full
     }
     
@@ -23,16 +24,18 @@ extension UIImageView {
             completion?(nil)
             return
         }
-        self.kf.indicatorType = .activity
        
         var processor: ImageProcessor
         switch size {
         case .small:
-            processor = DownsamplingImageProcessor(size: CGSize(width: 200, height: 350))
+            processor = DownsamplingImageProcessor(size: Constants.smallPosterSize)
+        case .medium:
+            processor = DownsamplingImageProcessor(size: Constants.mediumPosterSize)
         case .full:
             processor = DefaultImageProcessor()
         }
-
+        
+        self.kf.indicatorType = .activity
         self.kf.setImage(with: url,
                          placeholder: placeholder,
                          options: [.fromMemoryCacheOrRefresh, .processor(processor)],

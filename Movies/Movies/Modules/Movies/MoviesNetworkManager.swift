@@ -13,7 +13,7 @@ protocol MoviesNetworkService {
     func search(page: Int, text: String, completion: @escaping MoviesBlock)
 }
 
-final class MoviesAPIService: BaseNetworkService, MoviesNetworkService {
+final class MoviesNetworkManager: BaseNetworkService, MoviesNetworkService {
     func search(page: Int, text: String, completion: @escaping MoviesBlock) {
         request(from: .search(page: page, text: text), httpMethod: .get) {
             (result: Result<MovieResponse, Error>) in

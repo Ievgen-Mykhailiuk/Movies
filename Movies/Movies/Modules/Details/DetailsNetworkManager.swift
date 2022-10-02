@@ -1,5 +1,5 @@
 //
-//  DetailsAPIService.swift
+//  DetailsNetworkManager.swift
 //  Movies
 //
 //  Created by Евгений  on 26/09/2022.
@@ -12,7 +12,7 @@ protocol DetailsNetworkService {
     func fetchTrailerID(movieID: Int, completion: @escaping TrailerBlock)
 }
 
-final class DetailsAPIService: BaseNetworkService, DetailsNetworkService {
+final class DetailsNetworkManager: BaseNetworkService, DetailsNetworkService {
     func fetchDetails(movieID: Int, completion: @escaping DetailsBlock) {
         request(from: .details(movieID: movieID), httpMethod: .get) { (result: Result<DetailsData, Error>) in
             switch result {
