@@ -14,7 +14,6 @@ final public class MovieEntity: NSManagedObject {
     class func find(movieID: Int, context: NSManagedObjectContext) throws -> MovieEntity? {
         let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %d", movieID)
-        
         do {
             let fetchResult = try context.fetch(request)
             if fetchResult.count > 0 {
@@ -28,9 +27,8 @@ final public class MovieEntity: NSManagedObject {
         }
     }
     
-    class func all(context: NSManagedObjectContext) throws -> [MovieEntity] {
+    class func all(context: NSManagedObjectContext) throws -> [MovieEntity]? {
         let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        
         do {
             let fetchResult = try context.fetch(request)
             return fetchResult

@@ -12,23 +12,23 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="CollectionViewCell" customModule="Movies" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="489" height="591"/>
+            <rect key="frame" x="0.0" y="0.0" width="489" height="682"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="489" height="591"/>
+                <rect key="frame" x="0.0" y="0.0" width="489" height="682"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="SNU-gq-IEa">
-                        <rect key="frame" x="10" y="5" width="469" height="581"/>
+                        <rect key="frame" x="10" y="5" width="469" height="672"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUS-K1-v25">
-                                <rect key="frame" x="0.0" y="0.0" width="469" height="0.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="469" height="36"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="sf9-D0-aCC">
-                                <rect key="frame" x="0.0" y="10.5" width="469" height="20.5"/>
+                                <rect key="frame" x="0.0" y="46" width="469" height="76"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Released:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t0h-RA-QqB">
                                         <rect key="frame" x="0.0" y="0.0" width="404" height="20.5"/>
@@ -51,10 +51,10 @@
                                 </constraints>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CH7-yQ-fk0">
-                                <rect key="frame" x="0.0" y="41" width="469" height="479"/>
+                                <rect key="frame" x="0.0" y="132" width="469" height="479"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="AWv-1X-QZv">
-                                <rect key="frame" x="0.0" y="530" width="469" height="20.5"/>
+                                <rect key="frame" x="0.0" y="621" width="469" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Genres:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KVP-jY-Odw">
                                         <rect key="frame" x="0.0" y="0.0" width="65" height="20.5"/>
@@ -77,7 +77,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jdq-sK-YIm">
-                                <rect key="frame" x="0.0" y="560.5" width="469" height="20.5"/>
+                                <rect key="frame" x="0.0" y="651.5" width="469" height="20.5"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" image="star.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Cn8-TA-PYB">
                                         <rect key="frame" x="0.0" y="-0.5" width="22" height="20.5"/>
@@ -127,7 +127,7 @@
                 <constraint firstAttribute="bottom" secondItem="SNU-gq-IEa" secondAttribute="bottom" constant="5" id="cH1-Es-KTG"/>
                 <constraint firstAttribute="trailing" secondItem="SNU-gq-IEa" secondAttribute="trailing" constant="10" id="yvs-vd-hll"/>
             </constraints>
-            <size key="customSize" width="489" height="591"/>
+            <size key="customSize" width="489" height="682"/>
             <connections>
                 <outlet property="genresTotalLabel" destination="Pge-OC-AIh" id="g8z-RE-Gbk"/>
                 <outlet property="posterImageView" destination="CH7-yQ-fk0" id="o5u-gb-FTK"/>
@@ -137,7 +137,7 @@
                 <outlet property="titleLabel" destination="IUS-K1-v25" id="Gke-tg-1b2"/>
                 <outlet property="votesCountLabel" destination="iEH-ar-Lo1" id="o4w-Wl-azy"/>
             </connections>
-            <point key="canvasLocation" x="509.4202898550725" y="130.24553571428572"/>
+            <point key="canvasLocation" x="509.4202898550725" y="99.776785714285708"/>
         </collectionViewCell>
     </objects>
     <resources>

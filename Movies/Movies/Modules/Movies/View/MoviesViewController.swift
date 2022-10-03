@@ -17,28 +17,31 @@ final class MoviesViewController: UIViewController {
     
     //MARK: - Properties
     var presenter: MoviesPresenter!
-    var currentSortType: SortType = .byDefault
-    var isNetworkAvalable: Bool = false
-    let itemsLeftToNextPage: Int = 2
+    private var currentSortType: SortType = .byPopularity
+    private var isNetworkAvalable: Bool = false
+    private let itemsLeftToNextPage: Int = 2
+    private let estimatedCellHeight: CGFloat = 500
+    private let padding: CGFloat = 20
+    private let minSymbolsToSearch: Int = 2
     
-    private lazy var galleryLayout: UICollectionViewCompositionalLayout = {
-        let size = NSCollectionLayoutSize(widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-                                          heightDimension: NSCollectionLayoutDimension.estimated(500))
+    private lazy var layout: UICollectionViewCompositionalLayout = {
+        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                          heightDimension: .estimated(estimatedCellHeight))
         let item = NSCollectionLayoutItem(layoutSize: size)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: size,
                                                        subitem: item,
                                                        count: 1)
-        group.contentInsets = NSDirectionalEdgeInsets(top: 0,
-                                                      leading: 20,
-                                                      bottom: 0,
-                                                      trailing: 20)
+        group.contentInsets = NSDirectionalEdgeInsets(top: .zero,
+                                                      leading: padding,
+                                                      bottom: .zero,
+                                                      trailing: padding)
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 20
+        section.interGroupSpacing = padding
         return UICollectionViewCompositionalLayout(section: section)
     }()
     
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: galleryLayout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
     
@@ -46,7 +49,7 @@ final class MoviesViewController: UIViewController {
         let button = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
                                      style: .plain,
                                      target: self,
-                                     action: #selector(showActionSheet))
+                                     action: #selector(sortingAction))
         button.tintColor = .black
         return button
     }()
@@ -60,49 +63,49 @@ final class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        presenter.viewDidLoad(network: isNetworkAvalable)
+        presenter.viewDidLoad(isNetworkAvailable: isNetworkAvalable)
     }
     
     //MARK: - Action
-    @objc private func showActionSheet() {
+    @objc private func sortingAction() {
         let sortMenuController = UIAlertController(title: "Sort by",
                                                    message: nil,
                                                    preferredStyle: .actionSheet)
-        let defaultAction = UIAlertAction(title: "popular",
+        let byPopularityAction = UIAlertAction(title: "popular",
+                                               style: .default,
+                                               handler: { SortBlock in
+            self.scrollToTop()
+            self.currentSortType = .byPopularity
+            self.presenter.getSortedMovies(self.currentSortType)
+        })
+        let byVotesCountAction = UIAlertAction(title: "most voted",
+                                               style: .default,
+                                               handler: { SortBlock in
+            self.scrollToTop()
+            self.currentSortType = .byVotesCount
+            self.presenter.getSortedMovies(self.currentSortType)
+        })
+        let byTrendAction = UIAlertAction(title: "trending",
                                           style: .default,
                                           handler: { SortBlock in
-            self.currentSortType = .byDefault
-            self.presenter.getMovies(sorted: self.currentSortType)
-            self.collectionView.setContentOffset(.zero, animated: false)
-        })
-        let votesAction = UIAlertAction(title: "most voted",
-                                        style: .default,
-                                        handler: { SortBlock in
-            self.currentSortType = .byVotes
-            self.presenter.getMovies(sorted: self.currentSortType)
-            self.collectionView.setContentOffset(.zero, animated: false)
-        })
-        let trendAction = UIAlertAction(title: "trending",
-                                        style: .default,
-                                        handler: { SortBlock in
+            self.scrollToTop()
             self.currentSortType = .byTrend
-            self.presenter.getMovies(sorted: self.currentSortType)
-            self.collectionView.setContentOffset(.zero, animated: false)
+            self.presenter.getSortedMovies(self.currentSortType)
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
         switch currentSortType {
-        case .byDefault:
-            defaultAction.setValue(true, forKey: "checked")
-        case .byVotes:
-            votesAction.setValue(true, forKey: "checked")
+        case .byPopularity:
+            byPopularityAction.setValue(true, forKey: "checked")
+        case .byVotesCount:
+            byVotesCountAction.setValue(true, forKey: "checked")
         case .byTrend:
-            trendAction.setValue(true, forKey: "checked")
+            byTrendAction.setValue(true, forKey: "checked")
         }
         
-        sortMenuController.addAction(defaultAction)
-        sortMenuController.addAction(votesAction)
-        sortMenuController.addAction(trendAction)
+        sortMenuController.addAction(byPopularityAction)
+        sortMenuController.addAction(byVotesCountAction)
+        sortMenuController.addAction(byTrendAction)
         sortMenuController.addAction(cancelAction)
         self.present(sortMenuController, animated: true, completion: nil)
     }
@@ -118,7 +121,7 @@ final class MoviesViewController: UIViewController {
     
     private func setupNavigationBar() {
         title = "Popular Movies"
-        navigationItem.rightBarButtonItem = sortButton
+        navigationItem.setRightBarButton(sortButton, animated: false)
     }
     
     private func setupSearchBar() {
@@ -152,18 +155,22 @@ final class MoviesViewController: UIViewController {
     private func checkNetwork() {
         let monitor = NWPathMonitor()
         let queue = DispatchQueue(label: "InternetConnectionMonitor")
-        monitor.pathUpdateHandler = { pathUpdateHandler in
-            if pathUpdateHandler.status == .unsatisfied {
+        monitor.pathUpdateHandler = { path in
+            if path.status == .unsatisfied || path.status == .requiresConnection {
                 self.isNetworkAvalable = false
                 DispatchQueue.main.async {
                     self.navigationItem.setRightBarButton(nil, animated: false)
                     self.showAlert(title: "Error", message: Constants.offlineMsg)
                 }
             } else {
-                self.isNetworkAvalable = false
+                self.isNetworkAvalable = true
             }
         }
         monitor.start(queue: queue)
+    }
+    
+    private func scrollToTop() {
+        collectionView.setContentOffset(.zero, animated: false)
     }
 }
 
@@ -193,7 +200,7 @@ extension MoviesViewController: UICollectionViewDataSource {
         let movie = presenter.getMovie(for: indexPath.item)
         cell.configure(for: movie) {  [weak self] poster in
             guard let self = self else { return }
-            self.presenter.save(movie: movie, poster: poster)
+            self.presenter.modelIsReadyToSave(movie: movie, poster: poster)
         }
         return cell
     }
@@ -224,8 +231,8 @@ extension MoviesViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count >= 2 {
-            collectionView.setContentOffset(.zero, animated: true)
+        if searchText.count >= minSymbolsToSearch {
+            scrollToTop()
             presenter.search(text: searchText, network: isNetworkAvalable)
         } else {
             presenter.stopSearch()

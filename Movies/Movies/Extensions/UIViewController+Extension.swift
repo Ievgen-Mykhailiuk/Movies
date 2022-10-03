@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIViewController {
+    
     var isModal: Bool {
         return presentingViewController != nil ||
         navigationController?.presentingViewController != nil

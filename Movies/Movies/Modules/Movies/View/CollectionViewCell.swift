@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class CollectionViewCell: BaseCollectionViewCell {
     
@@ -23,6 +24,7 @@ final class CollectionViewCell: BaseCollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         posterImageView.image = nil
+        posterImageView.kf.cancelDownloadTask()
     }
     
     //MARK: - Configuration methods
@@ -35,7 +37,7 @@ final class CollectionViewCell: BaseCollectionViewCell {
         titleLabel.text = movie.title
         releaseYearLabel.text = movie.releaseYear
         genresTotalLabel.text = movie.genres.joined(separator: ", ")
-        rankLabel.text = movie.votesAverage 
+        rankLabel.text = movie.votesAverage
         votesCountLabel.text = movie.votesCount
         if let poster = movie.poster {
             posterImageView.image = poster

@@ -37,54 +37,50 @@ final class CoreDataService {
         }
     }
     
-    func deleteAll() {
-        do {
-            let context = persistentContainer.viewContext
-            let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-            let objects = try context.fetch(request)
-            _ = objects.map {context.delete($0)}
-            saveContext()
-        } catch {
-            print("Deleting error: \(error)")
-        }
-    }
-    
-    func getAllMovies(completion: @escaping ([MovieModel]?) -> Void) {
+    func loadAll(completion: @escaping DataBaseBlock) {
         context.perform {
-            let movieEntities = try? MovieEntity.all(context: self.context)
-            let movies = movieEntities?.map { MovieModel (genres: $0.genres,
-                                                          id: Int($0.id),
-                                                          popularity: $0.popularity,
-                                                          posterPath: $0.posterPath,
-                                                          releaseYear: $0.releaseYear,
-                                                          title: $0.title,
-                                                          votesAverage: $0.votesAverage,
-                                                          votesCount: $0.votesCount,
-                                                          overview: $0.overview,
-                                                          poster: UIImage(data: $0.poster ?? Data()))}
-            completion(movies)
-        }
-    }
-    
-    func saveMovie(movie: MovieModel, poster: UIImage?) {
-        context.perform {
-            let movieEntity = try? MovieEntity.find(movieID: movie.id, context: self.context)
-            if movieEntity == nil {
-                let newMovie = MovieEntity(context: self.context)
-                newMovie.setValue(movie.genres, forKey: "genres")
-                newMovie.setValue(movie.id, forKey: "id")
-                newMovie.setValue(movie.overview, forKey: "overview")
-                newMovie.setValue(movie.popularity, forKey: "popularity")
-                newMovie.setValue(movie.posterPath, forKey: "posterPath")
-                newMovie.setValue(movie.releaseYear, forKey: "releaseYear")
-                newMovie.setValue(movie.title, forKey: "title")
-                newMovie.setValue(movie.votesAverage, forKey: "votesAverage")
-                newMovie.setValue(movie.votesCount, forKey: "votesCount")
-                if let posterData = poster?.pngData() {
-                    newMovie.setValue(posterData, forKey: "poster")
-                }
+            do {
+                let movieEntities = try MovieEntity.all(context: self.context)
+                let movies = movieEntities?.map { MovieModel (genres: $0.genres,
+                                                             id: Int($0.id),
+                                                             popularity: $0.popularity,
+                                                             posterPath: $0.posterPath,
+                                                             releaseYear: $0.releaseYear,
+                                                             title: $0.title,
+                                                             votesAverage: $0.votesAverage,
+                                                             votesCount: $0.votesCount,
+                                                             overview: $0.overview,
+                                                             poster: UIImage(data: $0.poster ?? Data()))}
+                completion(.success(movies))
+            } catch {
+                completion(.failure(error))
             }
-            self.saveContext()
+        }
+    }
+    
+    func save(movie: MovieModel, poster: UIImage?, completion: @escaping ErrorBlock) {
+        context.perform {
+            do {
+                let movieEntity = try MovieEntity.find(movieID: movie.id, context: self.context)
+                if movieEntity == nil && poster != nil {
+                    let newMovie = MovieEntity(context: self.context)
+                    newMovie.setValue(movie.genres, forKey: "genres")
+                    newMovie.setValue(movie.id, forKey: "id")
+                    newMovie.setValue(movie.overview, forKey: "overview")
+                    newMovie.setValue(movie.popularity, forKey: "popularity")
+                    newMovie.setValue(movie.posterPath, forKey: "posterPath")
+                    newMovie.setValue(movie.releaseYear, forKey: "releaseYear")
+                    newMovie.setValue(movie.title, forKey: "title")
+                    newMovie.setValue(movie.votesAverage, forKey: "votesAverage")
+                    newMovie.setValue(movie.votesCount, forKey: "votesCount")
+                    if let posterData = poster?.pngData() {
+                        newMovie.setValue(posterData, forKey: "poster")
+                    }
+                }
+                self.saveContext()
+            } catch {
+                completion(error)
+            }
         }
     }
 }

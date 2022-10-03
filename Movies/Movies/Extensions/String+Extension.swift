@@ -8,6 +8,7 @@
 import Foundation
 
 extension String {
+    
     static let empty = ""
     
     static func getYear(stringDate: String) -> String {

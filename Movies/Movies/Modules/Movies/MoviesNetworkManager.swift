@@ -40,9 +40,9 @@ final class MoviesNetworkManager: BaseNetworkService, MoviesNetworkService {
     func fetch(page: Int, sortType: SortType, completion: @escaping MoviesBlock) {
         var endpoint: EndPoint = .popular(page: page)
         switch sortType {
-        case .byDefault:
+        case .byPopularity:
             endpoint = .popular(page: page)
-        case .byVotes:
+        case .byVotesCount:
             endpoint = .votes(page: page)
         case .byTrend:
             endpoint = .trend(page: page)

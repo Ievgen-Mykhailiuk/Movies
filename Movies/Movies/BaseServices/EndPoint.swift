@@ -19,7 +19,8 @@ enum EndPoint {
 }
 
 extension EndPoint {
-    var domainComponents: URLComponents {
+    
+    private var domainComponents: URLComponents {
         var components = URLComponents()
         components.scheme = "https"
         components.path = path
@@ -60,7 +61,7 @@ extension EndPoint {
         return components.url
     }
     
-    var path: String {
+    private var path: String {
         switch self {
         case .popular, .votes:
             return "/3/discover/movie"

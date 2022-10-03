@@ -24,8 +24,8 @@ extension UIImageView {
             completion?(nil)
             return
         }
-       
         var processor: ImageProcessor
+        
         switch size {
         case .small:
             processor = DownsamplingImageProcessor(size: Constants.smallPosterSize)

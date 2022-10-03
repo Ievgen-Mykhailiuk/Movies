@@ -15,12 +15,12 @@ struct DetailModel {
     let title: String
     let voteAverage: Double
     let voteCount: Int
-    var trailerID: String? = nil
     let countries: [String]
     let overview: String
+    var trailerID: String? = nil
 }
 
-//MARK: - Response Data Model
+//MARK: - Response Details Data 
 struct DetailsData: Decodable {
     let genres: [Genre]
     let overview: String
@@ -63,6 +63,7 @@ struct DetailsData: Decodable {
     }
 }
 
+//MARK: - Response Trailer Data
 struct TrailerResponse: Decodable {
     let id: Int
     let results: [Trailer]

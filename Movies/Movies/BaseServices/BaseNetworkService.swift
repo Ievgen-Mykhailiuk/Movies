@@ -10,23 +10,23 @@ import Alamofire
 
 protocol NetworkService {
     func request<T: Decodable>(from endPoint: EndPoint,
-                             httpMethod: BaseNetworkService.HttpMethod,
-                             completion: @escaping (Result<T, Error>) -> Void)
+                               httpMethod: BaseNetworkService.HttpMethod,
+                               completion: @escaping (Result<T, Error>) -> Void)
 }
 
 class BaseNetworkService: NetworkService {
     
     //MARK: - Http methods
-    enum HttpMethod:  String {
+    enum HttpMethod: String {
         case get
         var method: String { rawValue.uppercased() }
     }
-
+    
     //MARK: - Network request method
     func request<T: Decodable>(from endPoint: EndPoint,
-                             httpMethod: HttpMethod,
-                             completion: @escaping (Result<T, Error>) -> Void) {
-
+                               httpMethod: HttpMethod,
+                               completion: @escaping (Result<T, Error>) -> Void) {
+        
         guard let url = endPoint.url else { return }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.method

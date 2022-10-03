@@ -70,7 +70,7 @@ final class DetailsViewPresenter {
                     case .success(let data):
                         let trailer = data.results.first(where: { $0.type.lowercased() == "trailer" })
                         
-                        // save trailerID
+                        // save trailerID to model
                         self.movie?.trailerID = trailer?.key
                     case .failure(let error):
                         self.view.didFailWithError(error: error.localizedDescription)

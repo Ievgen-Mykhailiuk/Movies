@@ -21,7 +21,7 @@ struct MovieModel {
     var poster: UIImage? = nil
 }
 
-//MARK: - Response Data Model
+//MARK: - Response Movie Data
 struct MovieResponse: Decodable {
     let page: Int
     let results: [MovieData]
@@ -68,6 +68,7 @@ struct MovieData: Decodable {
     }
 }
 
+//MARK: - Response Genres Data
 struct Genres: Codable {
     let genres: [GenreModel]
 }
