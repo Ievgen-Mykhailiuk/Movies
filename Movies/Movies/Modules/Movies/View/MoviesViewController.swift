@@ -6,11 +6,11 @@
 //
 
 import UIKit
-import Network
 
 protocol MoviesView: AnyObject {
     func update()
     func didFailWithError(error: String)
+    func updateWithNetworkStatus(isAvailable: Bool)
 }
 
 final class MoviesViewController: UIViewController {
@@ -18,7 +18,6 @@ final class MoviesViewController: UIViewController {
     //MARK: - Properties
     var presenter: MoviesPresenter!
     private var currentSortType: SortType = .byPopularity
-    private var isNetworkAvalable: Bool = false
     private let itemsLeftToNextPage: Int = 2
     private let estimatedCellHeight: CGFloat = 500
     private let padding: CGFloat = 20
@@ -63,7 +62,7 @@ final class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        presenter.viewDidLoad(isNetworkAvailable: isNetworkAvalable)
+        presenter.viewDidLoad()
     }
     
     //MARK: - Action
@@ -112,7 +111,6 @@ final class MoviesViewController: UIViewController {
     
     //MARK: - Private methods
     private func initialSetup() {
-        checkNetwork()
         CollectionViewCell.registerNib(in: collectionView)
         setupNavigationBar()
         setupSearchBar()
@@ -121,7 +119,6 @@ final class MoviesViewController: UIViewController {
     
     private func setupNavigationBar() {
         title = "Popular Movies"
-        navigationItem.setRightBarButton(sortButton, animated: false)
     }
     
     private func setupSearchBar() {
@@ -152,23 +149,6 @@ final class MoviesViewController: UIViewController {
         ])
     }
     
-    private func checkNetwork() {
-        let monitor = NWPathMonitor()
-        let queue = DispatchQueue(label: "InternetConnectionMonitor")
-        monitor.pathUpdateHandler = { path in
-            if path.status == .unsatisfied || path.status == .requiresConnection {
-                self.isNetworkAvalable = false
-                DispatchQueue.main.async {
-                    self.navigationItem.setRightBarButton(nil, animated: false)
-                    self.showAlert(title: "Error", message: Constants.offlineMsg)
-                }
-            } else {
-                self.isNetworkAvalable = true
-            }
-        }
-        monitor.start(queue: queue)
-    }
-    
     private func scrollToTop() {
         collectionView.setContentOffset(.zero, animated: false)
     }
@@ -185,6 +165,12 @@ extension MoviesViewController: MoviesView {
     func update() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
+        }
+    }
+    
+    func updateWithNetworkStatus(isAvailable: Bool) {
+        DispatchQueue.main.async {
+            isAvailable ? self.navigationItem.setRightBarButton(self.sortButton, animated: false) : self.navigationItem.setRightBarButton(nil, animated: false)
         }
     }
 }
@@ -209,16 +195,13 @@ extension MoviesViewController: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegate
 extension MoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if isNetworkAvalable == true {
-            if indexPath.item == presenter.getItemsCount() - itemsLeftToNextPage {
-                presenter.nextPage(sort: currentSortType)
-            }
+        if indexPath.item == presenter.getItemsCount() - itemsLeftToNextPage {
+            presenter.nextPage(sort: currentSortType)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        isNetworkAvalable ?
-        presenter.movieTapped(at: indexPath.item) : showAlert(title: "Error", message: Constants.offlineMsg)
+        presenter.movieTapped(at: indexPath.item)
     }
 }
 
@@ -233,7 +216,7 @@ extension MoviesViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.count >= minSymbolsToSearch {
             scrollToTop()
-            presenter.search(text: searchText, network: isNetworkAvalable)
+            presenter.search(text: searchText)
         } else {
             presenter.stopSearch()
         }

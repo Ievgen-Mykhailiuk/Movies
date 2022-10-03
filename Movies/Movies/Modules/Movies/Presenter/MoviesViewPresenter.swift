@@ -5,16 +5,16 @@
 //  Created by Евгений  on 26/09/2022.
 //
 
-import Foundation
+import Network
 import UIKit
 
 protocol MoviesPresenter {
-    func viewDidLoad(isNetworkAvailable: Bool)
+    func viewDidLoad()
     func getSortedMovies(_ type: SortType)
     func getMovie(for index: Int) -> MovieModel
     func getItemsCount() -> Int
     func nextPage(sort type: SortType)
-    func search(text: String, network: Bool)
+    func search(text: String)
     func stopSearch()
     func movieTapped(at index: Int)
     func modelIsReadyToSave(movie: MovieModel, poster: UIImage?)
@@ -43,6 +43,7 @@ final class MoviesViewPresenter {
             view.update()
         }
     }
+    private var isNetworkAvailable: Bool = false
     private var genres = [GenreModel]()
     private var pageCounter: Int = 1
     private var timer: Timer?
@@ -60,24 +61,42 @@ final class MoviesViewPresenter {
         self.router = router
     }
     
-    //MARK: - Private mwethods
+    //MARK: - Private methods
+    private func checkNetworkStatus(completion: @escaping (Bool) -> Void) {
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { path in
+            if path.status == .unsatisfied || path.status == .requiresConnection {
+                completion(false)
+                self.isNetworkAvailable = false
+                self.view.didFailWithError(error: Constants.offlineMsg)
+            } else {
+                completion(true)
+                self.isNetworkAvailable = true
+            }
+            monitor.cancel()
+            self.view.updateWithNetworkStatus(isAvailable: self.isNetworkAvailable)
+        }
+        monitor.start(queue: .global())
+    }
+    
     private func getGenres() {
-        networkManager.fetchGenres { result in
+        networkManager.fetchGenres { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let data):
                 self.genres = data.genres
             case .failure(let error):
-                print(error)
+                self.view.didFailWithError(error: error.localizedDescription)
             }
         }
     }
     
-    private func useNetworkData() {
+    private func getNetworkData() {
         getGenres()
         getSortedMovies(.byPopularity)
     }
     
-    private func useCoreData() {
+    private func getCoreData() {
         dataBaseManager.loadAll { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -124,9 +143,9 @@ final class MoviesViewPresenter {
     private func networkSearch() {
         timer?.invalidate()
         searchIsActive = true
-        timer = .scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-            guard let self = self else { return }
-            self.networkManager.search(page: self.pageCounter, text: self.searchText) { result in
+        timer = .scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+            self.networkManager.search(page: self.pageCounter, text: self.searchText) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let data):
                     let movies = data.results
@@ -163,8 +182,11 @@ final class MoviesViewPresenter {
 
 //MARK: - MoviesPresenterProtocol
 extension MoviesViewPresenter: MoviesPresenter {
-    func viewDidLoad(isNetworkAvailable: Bool) {
-        isNetworkAvailable ? useNetworkData() : useCoreData()
+    func viewDidLoad() {
+        checkNetworkStatus { network in
+            network ?
+            self.getNetworkData() : self.getCoreData()
+        }
     }
     
     func getSortedMovies(_ type: SortType) {
@@ -189,14 +211,18 @@ extension MoviesViewPresenter: MoviesPresenter {
     }
     
     func nextPage(sort type: SortType) {
-        nextPage()
-        searchIsActive ?  networkSearch() : getMovies(sortType: type, nextPage: true)
+        if isNetworkAvailable == true {
+            nextPage()
+            searchIsActive ?
+            networkSearch() : getMovies(sortType: type, nextPage: true)
+        }
     }
     
-    func search(text: String, network: Bool) {
+    func search(text: String) {
         resetPageCounter()
         searchText = text
-        network ? networkSearch() : localSearch()
+        isNetworkAvailable ?
+        networkSearch() : localSearch()
     }
     
     func stopSearch() {
@@ -204,12 +230,12 @@ extension MoviesViewPresenter: MoviesPresenter {
         searchIsActive = false
         searchResults = []
         searchText = .empty
-        resetPageCounter()
     }
     
     func movieTapped(at index: Int) {
         let movie = getMovie(for: index)
-        router.showDetails(movieID: movie.id)
+        isNetworkAvailable ?
+        router.showDetails(movieID: movie.id) : view.didFailWithError(error: Constants.offlineMsg)
     }
     
     func modelIsReadyToSave(movie: MovieModel, poster: UIImage?) {
