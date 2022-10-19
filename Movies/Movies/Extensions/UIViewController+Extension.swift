@@ -14,6 +14,8 @@ extension UIViewController {
         navigationController?.presentingViewController != nil
     }
     
+    var loadingViewTag: Int { return 999999 }
+    
     func showAlert(title: String?,
                    message: String?,
                    actions: [UIAlertAction]? = nil) {
@@ -46,5 +48,28 @@ extension UIViewController {
         let controller = storyboard.instantiateViewController(withIdentifier: String(describing: self)) as! T
         return controller
     }
+    
+    func showLoadingView(indicatorColor: UIColor?, backgroundColor: UIColor?) {
+        let backgroundView = UIView(frame: self.view.bounds)
+        backgroundView.backgroundColor = backgroundColor ?? .white
+        backgroundView.tag = loadingViewTag
+        let activityIndicator =  UIActivityIndicatorView(style: .large)
+        activityIndicator.color = indicatorColor ?? .gray
+        activityIndicator.center = backgroundView.center
+        backgroundView.addSubview(activityIndicator)
+        DispatchQueue.main.async {
+            activityIndicator.startAnimating()
+            self.view.addSubview(backgroundView)
+        }
+    }
+    
+    func hideLoadingView() {
+        if let loadingView = self.view.viewWithTag(loadingViewTag) {
+            DispatchQueue.main.async {
+                loadingView.removeFromSuperview()
+            }
+        }
+    }
+    
 }
 

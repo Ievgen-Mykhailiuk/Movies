@@ -9,6 +9,7 @@ import UIKit
 
 //MARK: - UI Movie Model
 struct MovieModel {
+    
     let genres: [String]
     let id: Int
     let popularity: String
@@ -18,23 +19,62 @@ struct MovieModel {
     let votesAverage: String
     let votesCount: String
     let overview: String
-    var poster: UIImage? = nil
+    
+    static func from(networkModel: MovieData, using genres: [GenreModel]) -> MovieModel {
+        let genres = networkModel.genreIDS.compactMap { id in
+            genres.first(where: { $0.id == id })?.name
+        }
+        let releaseYear = Date.getYear(from: networkModel.releaseDate)
+        let model = MovieModel(genres: genres,
+                               id: networkModel.id,
+                               popularity: networkModel.popularity.stringDecimalValue,
+                               posterPath: networkModel.posterPath,
+                               releaseYear: releaseYear,
+                               title: networkModel.title,
+                               votesAverage: networkModel.votesAverage.stringDecimalValue,
+                               votesCount: networkModel.voteCount.stringValue,
+                               overview: networkModel.overview)
+        return model
+    }
+    
+    static func from(entity: MovieEntity) -> MovieModel {
+        let model = MovieModel(genres: entity.genres,
+                               id: Int(entity.id),
+                               popularity: entity.popularity,
+                               posterPath: entity.posterPath,
+                               releaseYear: entity.releaseYear,
+                               title: entity.title,
+                               votesAverage: entity.votesAverage,
+                               votesCount: entity.votesCount,
+                               overview: entity.overview)
+        return model
+    }
+    
 }
 
 //MARK: - Response Movie Data
-struct MovieResponse: Decodable {
+struct MovieResponse: Codable {
+    
     let page: Int
     let results: [MovieData]
-    let totalPages, totalResults: Int
+    let totalPages: Int
     
     private enum CodingKeys: String, CodingKey {
         case page, results
         case totalPages = "total_pages"
-        case totalResults = "total_results"
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.page = try container.decodeIfPresent(Int.self, forKey: .page) ?? .zero
+        self.results = try container.decodeIfPresent([MovieData].self, forKey: .results) ?? []
+        self.totalPages = try container.decodeIfPresent(Int.self, forKey: .totalPages) ?? .zero
+    }
+    
 }
-
-struct MovieData: Decodable {
+    
+struct MovieData: Codable {
+    
     let genreIDS: [Int]
     let id: Int
     let overview: String
@@ -66,14 +106,5 @@ struct MovieData: Decodable {
         self.votesAverage = try container.decodeIfPresent(Double.self, forKey: .votesAverage) ?? .zero
         self.voteCount = try container.decodeIfPresent(Int.self, forKey: .voteCount) ?? .zero
     }
-}
-
-//MARK: - Response Genres Data
-struct Genres: Codable {
-    let genres: [GenreModel]
-}
-
-struct GenreModel: Codable {
-    let id: Int
-    let name: String
+    
 }

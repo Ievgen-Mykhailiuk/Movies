@@ -15,40 +15,46 @@ final class PosterViewController: UIViewController {
     
     //MARK: - Properties
     var presenter: PosterPresenter!
+    private let minZoomScale: CGFloat = 1.0
+    private let maxZoomScale: CGFloat = 10.0
+    private let animationDuration: TimeInterval = 0.3
+    
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
         return view
     }()
+   
     private lazy var posterImageView: UIImageView = {
         let view = UIImageView()
         return view
     }()
-    
+
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        presenter.getPoster()
+        presenter.viewDidLoad()
     }
     
     //MARK: - Action
-    @objc func handleSwipe(_ sender:UISwipeGestureRecognizer) {
-        presenter.posterSwiped()
+    @objc private func handleSwipe(_ sender:UISwipeGestureRecognizer) {
+        presenter.swiped()
     }
-    
+
     //MARK: - Private methods
     private func initialSetup() {
-        scrollView.delegate = self
-        view.backgroundColor = .white
+        showLoadingView(indicatorColor: Constants.appShadowColor,
+                        backgroundColor: Constants.appBackgroundColor)
+        view.backgroundColor = Constants.appBackgroundColor
         setupScrollView()
         setupPosterImageView()
-        setSwipeRecognizer()
+        setupSwipeRecognizer()
     }
     
     private func setupScrollView() {
         scrollView.frame = view.bounds
-        scrollView.maximumZoomScale = 10.0
-        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = maxZoomScale
+        scrollView.minimumZoomScale = minZoomScale
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.delegate = self
@@ -61,7 +67,7 @@ final class PosterViewController: UIViewController {
         scrollView.addSubview(posterImageView)
     }
     
-    private func setSwipeRecognizer() {
+    private func setupSwipeRecognizer() {
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
         swipe.direction = .down
         view.addGestureRecognizer(swipe)
@@ -71,7 +77,10 @@ final class PosterViewController: UIViewController {
 //MARK: - PosterViewProtocol
 extension PosterViewController: PosterView {
     func showPoster(with path: String) {
-        self.posterImageView.setImage(size: .full, endPoint: .poster(path: path))
+        let urlString = EndPoint.poster(size: .full, path: path).urlString
+        posterImageView.setImage(urlString: urlString) {
+            self.hideLoadingView()
+        }
     }
 }
 
@@ -79,5 +88,11 @@ extension PosterViewController: PosterView {
 extension PosterViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return posterImageView
+    }
+    
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        UIView.animate(withDuration: animationDuration, delay: .zero, options: []) {
+            self.scrollView.zoomScale = self.minZoomScale
+        }
     }
 }

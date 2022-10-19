@@ -5,11 +5,11 @@
 //  Created by Евгений  on 28/09/2022.
 //
 
-import Foundation
+import UIKit
 
 protocol PosterPresenter {
-    func getPoster()
-    func posterSwiped()
+    func viewDidLoad()
+    func swiped()
 }
 
 final class PosterViewPresenter {
@@ -29,11 +29,11 @@ final class PosterViewPresenter {
 
 //MARK: - PosterPresenterProtocol
 extension PosterViewPresenter: PosterPresenter {
-    func getPoster() {
-        self.view.showPoster(with: path)
+    func viewDidLoad() {
+        view.showPoster(with: path)
     }
     
-    func posterSwiped() {
+    func swiped() {
         router.close()
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 protocol MoviesView: AnyObject {
     func update()
-    func didFailWithError(error: String)
+    func showError(with message: String)
     func updateWithNetworkStatus(isAvailable: Bool)
 }
 
@@ -17,11 +17,15 @@ final class MoviesViewController: UIViewController {
     
     //MARK: - Properties
     var presenter: MoviesPresenter!
-    private var currentSortType: SortType = .byPopularity
+    private var currentSortType: SortType = .popular {
+        didSet {
+            scrollToTop()
+            presenter.getSortedMovies(currentSortType)
+        }
+    }
     private let itemsLeftToNextPage: Int = 2
-    private let estimatedCellHeight: CGFloat = 500
-    private let padding: CGFloat = 20
-    private let minSymbolsToSearch: Int = 2
+    private let estimatedCellHeight: CGFloat = 200
+    private let padding: CGFloat = 10
     
     private lazy var layout: UICollectionViewCompositionalLayout = {
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
@@ -49,13 +53,29 @@ final class MoviesViewController: UIViewController {
                                      style: .plain,
                                      target: self,
                                      action: #selector(sortingAction))
-        button.tintColor = .black
         return button
     }()
     
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        return searchBar
+    private lazy var defaultTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Popular Movies"
+        label.textColor = Constants.appShadowColor
+        return label
+    }()
+    
+    private lazy var searchBarContoller: UISearchController = {
+        let controller = UISearchController()
+        return controller
+    }()
+    
+    private lazy var scrollToTopButton: UIImageView = {
+        let arrowView = UIImageView()
+        arrowView.backgroundColor = .white
+        arrowView.image = UIImage(systemName: "arrow.up.circle.fill")
+        arrowView.tintColor = Constants.appShadowColor
+        arrowView.cornerRadius = 25
+        arrowView.isUserInteractionEnabled = true
+        return arrowView
     }()
     
     //MARK: - Life Cycle
@@ -65,47 +85,54 @@ final class MoviesViewController: UIViewController {
         presenter.viewDidLoad()
     }
     
-    //MARK: - Action
+    //MARK: - Actions
+    @objc func scrollToTopButtonTapped(_ sender: UITapGestureRecognizer) {
+        scrollToTop()
+    }
+ 
     @objc private func sortingAction() {
         let sortMenuController = UIAlertController(title: "Sort by",
                                                    message: nil,
                                                    preferredStyle: .actionSheet)
-        let byPopularityAction = UIAlertAction(title: "popular",
-                                               style: .default,
-                                               handler: { SortBlock in
-            self.scrollToTop()
-            self.currentSortType = .byPopularity
-            self.presenter.getSortedMovies(self.currentSortType)
+        let popular = UIAlertAction(title: "popular",
+                                    style: .default,
+                                    handler: { SortBlock in
+            self.currentSortType = .popular
         })
-        let byVotesCountAction = UIAlertAction(title: "most voted",
-                                               style: .default,
-                                               handler: { SortBlock in
-            self.scrollToTop()
-            self.currentSortType = .byVotesCount
-            self.presenter.getSortedMovies(self.currentSortType)
+        let nowPlaying = UIAlertAction(title: "now playing",
+                                       style: .default,
+                                       handler: { SortBlock in
+            self.currentSortType = .nowPlaying
         })
-        let byTrendAction = UIAlertAction(title: "trending",
-                                          style: .default,
-                                          handler: { SortBlock in
-            self.scrollToTop()
-            self.currentSortType = .byTrend
-            self.presenter.getSortedMovies(self.currentSortType)
+        let topRated = UIAlertAction(title: "top rated",
+                                     style: .default,
+                                     handler: { SortBlock in
+            self.currentSortType = .topRated
+        })
+        let upcoming = UIAlertAction(title: "upcoming",
+                                     style: .default,
+                                     handler: { SortBlock in
+            self.currentSortType = .upcoming
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
         switch currentSortType {
-        case .byPopularity:
-            byPopularityAction.setValue(true, forKey: "checked")
-        case .byVotesCount:
-            byVotesCountAction.setValue(true, forKey: "checked")
-        case .byTrend:
-            byTrendAction.setValue(true, forKey: "checked")
+        case .nowPlaying:
+            nowPlaying.setValue(true, forKey: "checked")
+        case .popular:
+            popular.setValue(true, forKey: "checked")
+        case .topRated:
+            topRated.setValue(true, forKey: "checked")
+        case .upcoming:
+            upcoming.setValue(true, forKey: "checked")
         }
         
-        sortMenuController.addAction(byPopularityAction)
-        sortMenuController.addAction(byVotesCountAction)
-        sortMenuController.addAction(byTrendAction)
+        sortMenuController.addAction(nowPlaying)
+        sortMenuController.addAction(popular)
+        sortMenuController.addAction(topRated)
+        sortMenuController.addAction(upcoming)
         sortMenuController.addAction(cancelAction)
+        sortMenuController.view.tintColor = Constants.appShadowColor
         self.present(sortMenuController, animated: true, completion: nil)
     }
     
@@ -113,65 +140,71 @@ final class MoviesViewController: UIViewController {
     private func initialSetup() {
         CollectionViewCell.registerNib(in: collectionView)
         setupNavigationBar()
-        setupSearchBar()
         setupCollectionView()
+        setupSearchController()
+        setupScrollToTopButton()
     }
     
     private func setupNavigationBar() {
-        title = "Popular Movies"
-    }
-    
-    private func setupSearchBar() {
-        searchBar.delegate = self
-        searchBar.placeholder = "Search..."
-        searchBar.backgroundImage = UIImage()
-        searchBar.showsCancelButton = true
-        view.addSubview(searchBar)
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
-            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-            searchBar.heightAnchor.constraint(equalToConstant: 30)
-        ])
+        navigationItem.searchController = searchBarContoller
+        navigationItem.titleView = defaultTitleLabel
+        navigationItem.setRightBarButton(sortButton, animated: false)
     }
     
     private func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.backgroundColor = Constants.appBackgroundColor
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
-    private func scrollToTop() {
-        collectionView.setContentOffset(.zero, animated: false)
+    private func setupSearchController() {
+        searchBarContoller.searchBar.delegate = self
     }
+    
+    private func setupScrollToTopButton() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(scrollToTopButtonTapped(_:)))
+        scrollToTopButton.addGestureRecognizer(tap)
+        scrollToTopButton.isHidden = true
+        view.addSubview(scrollToTopButton)
+        
+        scrollToTopButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            scrollToTopButton.widthAnchor.constraint(equalToConstant: 50),
+            scrollToTopButton.heightAnchor.constraint(equalToConstant: 50),
+            scrollToTopButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -75),
+            scrollToTopButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25)
+        ])
+    }
+    
+    private func scrollToTop() {
+        collectionView.scrollToItem(at: IndexPath(item: .zero, section: .zero),
+                                    at: .centeredVertically,
+                                    animated: true)
+    }
+    
 }
 
 //MARK: - MoviesViewProtocol
 extension MoviesViewController: MoviesView {
-    func didFailWithError(error: String) {
-        DispatchQueue.main.async {
-            self.showAlert(title: "Error", message: error)
-        }
+    func showError(with message: String) {
+        showAlert(title: .defaultError, message: message)
     }
     
     func update() {
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
+        collectionView.reloadData()
     }
     
     func updateWithNetworkStatus(isAvailable: Bool) {
-        DispatchQueue.main.async {
-            isAvailable ? self.navigationItem.setRightBarButton(self.sortButton, animated: false) : self.navigationItem.setRightBarButton(nil, animated: false)
-        }
+        isAvailable ?
+        navigationItem.setRightBarButton(sortButton, animated: false) : navigationItem.setRightBarButton(nil, animated: false)
     }
 }
 
@@ -184,10 +217,7 @@ extension MoviesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: CollectionViewCell = .cell(in: self.collectionView, at: indexPath)
         let movie = presenter.getMovie(for: indexPath.item)
-        cell.configure(for: movie) {  [weak self] poster in
-            guard let self = self else { return }
-            self.presenter.modelIsReadyToSave(movie: movie, poster: poster)
-        }
+        cell.configure(for: movie)
         return cell
     }
 }
@@ -196,7 +226,7 @@ extension MoviesViewController: UICollectionViewDataSource {
 extension MoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.item == presenter.getItemsCount() - itemsLeftToNextPage {
-            presenter.nextPage(sort: currentSortType)
+            presenter.getNextPage(sort: currentSortType)
         }
     }
     
@@ -208,28 +238,22 @@ extension MoviesViewController: UICollectionViewDelegate {
 //MARK: - UISearchBarDelegate
 extension MoviesViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = .empty
-        searchBar.endEditing(true)
         presenter.stopSearch()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count >= minSymbolsToSearch {
-            scrollToTop()
-            presenter.search(text: searchText)
-        } else {
-            presenter.stopSearch()
-        }
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.endEditing(true)
+        presenter.search(text: searchText)
     }
 }
 
 //MARK: - UIScrollViewDelegate
 extension MoviesViewController: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        searchBar.endEditing(true)
+        searchBarContoller.searchBar.endEditing(true)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        scrollToTopButton.isHidden = (offsetY < collectionView.frame.height)
     }
 }

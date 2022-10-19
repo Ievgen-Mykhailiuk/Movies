@@ -8,8 +8,8 @@
 import UIKit
 
 protocol DetailsView: AnyObject {
-    func showDetails(movie: DetailModel?)
-    func didFailWithError(error: String)
+    func showDetails(movie: DetailsModel?)
+    func showError(with message: String)
 }
 
 final class DetailsViewController: UIViewController {
@@ -27,31 +27,46 @@ final class DetailsViewController: UIViewController {
     
     //MARK: - Properties
     var presenter: DetailsPresenter!
+    private let radius: CGFloat = 10
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = Constants.appShadowColor
+        return label
+    }()
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTrailerButton()
-        setRecognizer()
+        initialSetup()
         presenter.viewDidLoad()
     }
     
     //MARK: - Actions
     @IBAction private func trailerButtonTapped(_ sender: Any) {
-        presenter.playButtonTapped()
+        presenter.playTrailer()
     }
     
     @objc private func imageTapped(_: UITapGestureRecognizer) {
-        presenter.posterTapped()
+        presenter.showPoster()
     }
     
     //MARK: - Private Methods
+    private func initialSetup() {
+        showLoadingView(indicatorColor: Constants.appShadowColor,
+                        backgroundColor: Constants.appBackgroundColor)
+        setupTrailerButton()
+        setRecognizer()
+    }
+    
     private func setupNavigationBar(title: String) {
-        self.title = title
+        titleLabel.text = title
+        navigationItem.titleView = titleLabel
     }
     
     private func setupTrailerButton() {
         trailerButton.makeRounded()
+        trailerButton.backgroundColor = Constants.appShadowColor
         trailerButton.isHidden = true
     }
     
@@ -61,34 +76,36 @@ final class DetailsViewController: UIViewController {
         posterImageView.addGestureRecognizer(recognizer)
     }
     
-    private func configure(movie: DetailModel?) {
+    private func setPoster(for movie: DetailsModel) {
+        let urlString = EndPoint.poster(size: .small, path: movie.posterPath).urlString
+        let placeholder = Constants.placeholder
+        posterImageView.setImage(urlString: urlString, placeholder: placeholder)
+        posterImageView.cornerRadius = radius
+    }
+
+    private func configure(movie: DetailsModel?) {
         guard let movie = movie else { return }
-        posterImageView.setImage(size: .medium, endPoint: .poster(path: movie.posterPath))
-        countryLabel.text = movie.countries.joined(separator: ", ")
+        setPoster(for: movie)
+        countryLabel.text = movie.countries.joined(separator: .comaSeparator)
         movieNameLabel.text = movie.title
-        genresLabel.text = movie.genres.joined(separator: ", ")
+        genresLabel.text = movie.genres.joined(separator: .comaSeparator)
         releaseYearLabel.text = movie.releaseYear
-        rankLabel.text = String(format: "%.1f", movie.voteAverage)
-        votesCountLabel.text = String(movie.voteCount)
+        rankLabel.text = movie.voteAverage.stringDecimalValue
+        votesCountLabel.text = movie.voteCount.stringValue
         overviewLabel.text = movie.overview
-        if movie.trailerID != nil {
-            trailerButton.isHidden = false
-        }
+        trailerButton.isHidden = movie.trailerID == nil
     }
 }
 
 //MARK: - DetailsViewProtocol
 extension DetailsViewController: DetailsView {
-    func didFailWithError(error: String) {
-        DispatchQueue.main.async {
-            self.showAlert(title: "Error", message: error)
-        }
+    func showError(with message: String) {
+        showAlert(title: .defaultError, message: message)
     }
     
-    func showDetails(movie: DetailModel?) {
-        DispatchQueue.main.async {
-            self.setupNavigationBar(title: movie?.title ?? .empty)
-            self.configure(movie: movie)
-        }
+    func showDetails(movie: DetailsModel?) {
+        hideLoadingView()
+        setupNavigationBar(title: movie?.title ?? .empty)
+        configure(movie: movie)
     }
 }

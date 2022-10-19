@@ -7,22 +7,21 @@
 
 import UIKit
 
-protocol PostListAssembly {
+protocol MoviesAssembly {
     func createMoviesModule() -> UIViewController
 }
 
-final class DefaultMoviesAssembly: PostListAssembly {
+final class DefaultMoviesAssembly: MoviesAssembly {
     func createMoviesModule() -> UIViewController {
         let view  = MoviesViewController.instantiateFromStoryboard()
-        let networkManager = MoviesNetworkManager()
-        let dataBaseManager = CoreDataService()
+        let dataManager = DefaultMoviesRepository()
         let router = DefaultMoviesRouter(viewController: view)
         let presenter = MoviesViewPresenter(view: view,
-                                            networkManager: networkManager,
-                                            dataBaseManager: dataBaseManager,
+                                            dataManager: dataManager,
                                             router: router)
         view.presenter = presenter
         let navigationController = UINavigationController(rootViewController: view)
+        navigationController.navigationBar.tintColor = Constants.appShadowColor
         return navigationController
     }
 }

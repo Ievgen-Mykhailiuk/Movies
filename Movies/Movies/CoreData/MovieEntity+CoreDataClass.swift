@@ -2,26 +2,22 @@
 //  MovieEntity+CoreDataClass.swift
 //  Movies
 //
-//  Created by Евгений  on 02/10/2022.
+//  Created by Евгений  on 11/10/2022.
 //
 //
 
 import Foundation
 import CoreData
 
-final public class MovieEntity: NSManagedObject {
+
+public class MovieEntity: NSManagedObject {
     
-    class func find(movieID: Int, context: NSManagedObjectContext) throws -> MovieEntity? {
+    class func find(movieID: Int, context: NSManagedObjectContext) throws -> [MovieEntity]? {
         let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %d", movieID)
         do {
             let fetchResult = try context.fetch(request)
-            if fetchResult.count > 0 {
-                assert(fetchResult.count == 1, "Duplicate has found in DB")
-                return fetchResult[0]
-            } else {
-                return nil
-            }
+            return fetchResult
         } catch {
             throw error
         }
@@ -36,5 +32,5 @@ final public class MovieEntity: NSManagedObject {
             throw error
         }
     }
-}
 
+}

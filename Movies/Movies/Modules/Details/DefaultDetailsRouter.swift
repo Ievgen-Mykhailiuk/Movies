@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import YouTubePlayerKit
 
 protocol DetailsRouter {
     func showTrailer(trailerID: String)
@@ -14,7 +15,8 @@ protocol DetailsRouter {
 
 final class DefaultDetailsRouter: BaseRouter, DetailsRouter {
     func showTrailer(trailerID: String) {
-        let viewController = DefaultDetailsAssembly().createTrailerModule(trailerID: trailerID)
+        let viewController = YouTubePlayerViewController(source: .video(id: trailerID),
+                                                         configuration: .init())
         show(viewController: viewController,
              isModal: false,
              animated: false,
