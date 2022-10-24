@@ -8,12 +8,12 @@
 import Foundation
 
 protocol MoviesRouter {
-    func showDetails(movieID: Int)
+    func showDetails(for movie: MovieModel)
 }
 
 final class DefaultMoviesRouter: BaseRouter, MoviesRouter {
-    func showDetails(movieID: Int) {
-        let viewController = DefaultDetailsAssembly().createDetailsModule(movieID: movieID)
+    func showDetails(for movie: MovieModel) {
+        let viewController = DefaultDetailsAssembly().createDetailsModule(for: movie)
         show(viewController: viewController,
              isModal: false,
              animated: true,

@@ -28,12 +28,7 @@ final class DetailsViewController: UIViewController {
     //MARK: - Properties
     var presenter: DetailsPresenter!
     private let radius: CGFloat = 10
-    
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        return label
-    }()
-    
+
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,14 +52,7 @@ final class DetailsViewController: UIViewController {
         setupTrailerButton()
         setRecognizer()
     }
-    
-    private func setupNavigationBar(title: String) {
-        let attributes: [NSAttributedString.Key: Any] = [.font: UIFont(name: Constants.appFont, size: 30) as Any,
-                                                         .foregroundColor: Constants.appShadowColor as Any]
-        titleLabel.attributedText = NSAttributedString(string: title, attributes: attributes)
-        navigationItem.titleView = titleLabel
-    }
-    
+
     private func setupTrailerButton() {
         trailerButton.makeRounded()
         trailerButton.backgroundColor = Constants.appShadowColor
@@ -105,7 +93,6 @@ extension DetailsViewController: DetailsView {
     }
     
     func showDetails(movie: DetailsModel?) {
-        setupNavigationBar(title: movie?.title ?? .empty)
         configure(movie: movie)
         hideLoadingView()
     }

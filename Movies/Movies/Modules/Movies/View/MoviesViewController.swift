@@ -55,15 +55,7 @@ final class MoviesViewController: UIViewController {
                                      action: #selector(sortButtonAction))
         return button
     }()
-    
-    private lazy var defaultTitleLabel: UILabel = {
-        let label = UILabel()
-        let attributes: [NSAttributedString.Key: Any] = [.font: UIFont(name: Constants.appFont, size: 30) as Any,
-                                                         .foregroundColor: Constants.appShadowColor as Any]
-        label.attributedText = NSAttributedString(string: "Popular Movies", attributes: attributes)
-        return label
-    }()
-    
+
     private lazy var searchBarContoller: UISearchController = {
         let controller = UISearchController()
         controller.searchBar.searchTextField.backgroundColor = Constants.appShadowColor
@@ -136,7 +128,6 @@ final class MoviesViewController: UIViewController {
     
     private func setupNavigationBar() {
         navigationItem.searchController = searchBarContoller
-        navigationItem.titleView = defaultTitleLabel
         navigationItem.setRightBarButton(sortButton, animated: false)
     }
     

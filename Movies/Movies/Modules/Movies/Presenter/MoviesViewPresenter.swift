@@ -29,7 +29,7 @@ final class MoviesViewPresenter {
     private var searchWorkItem: DispatchWorkItem?
     private var searchText: String = .empty
     private var genres = [GenreModel]()
-
+    
     private var isSearchActive: Bool {
         return !searchText.isEmpty
     }
@@ -149,12 +149,10 @@ final class MoviesViewPresenter {
         movies.removeAll()
         getData()
         if !ReachabilityManager.shared.isNetworkAvailable {
-            DispatchQueue.main.async {
-                self.view.showError(with: NetworkError.offline.errorDescription)
-            }
+            view.showError(with: NetworkError.offline.errorDescription)
         }
     }
-
+    
     private func startNetworkMonitoring() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(networkStatusChanged),
@@ -213,7 +211,7 @@ extension MoviesViewPresenter: MoviesPresenter {
     func itemSelected(at index: Int) {
         let movie = getItem(for: index)
         ReachabilityManager.shared.isNetworkAvailable ?
-        router.showDetails(movieID: movie.id) :
+        router.showDetails(for: movie):
         view.showError(with: NetworkError.offline.errorDescription)
     }
 }
