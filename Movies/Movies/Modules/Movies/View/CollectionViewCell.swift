@@ -11,7 +11,6 @@ import Kingfisher
 final class CollectionViewCell: BaseCollectionViewCell {
     
     //MARK: - Outlets
-    @IBOutlet weak var shadowView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var releaseYearLabel: UILabel!
     @IBOutlet private weak var posterImageView: UIImageView!
@@ -26,8 +25,8 @@ final class CollectionViewCell: BaseCollectionViewCell {
     //MARK: - Private methods
     private func applyVisualEffects() {
         posterImageView.cornerRadius = radius
-        shadowView.cornerRadius = radius
-        shadowView.addShadow(color: Constants.appShadowColor?.cgColor)
+        contentView.cornerRadius = radius
+        addShadow(color: Constants.appShadowColor?.cgColor ?? UIColor.white.cgColor)
     }
     
     private func setPoster(for movie: MovieModel) {

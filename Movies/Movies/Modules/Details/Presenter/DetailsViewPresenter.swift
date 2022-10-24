@@ -37,8 +37,8 @@ final class DetailsViewPresenter {
     private func getDetails() {
         dataManager.fetchDetails(movieID: movieID) { [weak self] result in
             switch result {
-            case .success(let data):
-                self?.movie = DetailsModel.from(networkModel: data)
+            case .success(let movie):
+                self?.movie = movie
                 self?.getTrailerID {
                     self?.view.showDetails(movie: self?.movie)
                 }
@@ -51,9 +51,8 @@ final class DetailsViewPresenter {
     private func getTrailerID(completion: EmptyBlock? = nil) {
         dataManager.fetchTrailerID(movieID: movieID) { [weak self] result in
             switch result {
-            case .success(let data):
-                let trailer = data.results.first(where: { $0.type.lowercased() == "trailer" })
-                self?.movie?.trailerID = trailer?.key
+            case .success(let trailerID):
+                self?.movie?.trailerID = trailerID
             case .failure(let error):
                 self?.view.showError(with: error.localizedDescription)
             }

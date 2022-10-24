@@ -31,7 +31,6 @@ final class DetailsViewController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.appShadowColor
         return label
     }()
     
@@ -60,7 +59,9 @@ final class DetailsViewController: UIViewController {
     }
     
     private func setupNavigationBar(title: String) {
-        titleLabel.text = title
+        let attributes: [NSAttributedString.Key: Any] = [.font: UIFont(name: Constants.appFont, size: 30) as Any,
+                                                         .foregroundColor: Constants.appShadowColor as Any]
+        titleLabel.attributedText = NSAttributedString(string: title, attributes: attributes)
         navigationItem.titleView = titleLabel
     }
     
@@ -104,8 +105,8 @@ extension DetailsViewController: DetailsView {
     }
     
     func showDetails(movie: DetailsModel?) {
-        hideLoadingView()
         setupNavigationBar(title: movie?.title ?? .empty)
         configure(movie: movie)
+        hideLoadingView()
     }
 }

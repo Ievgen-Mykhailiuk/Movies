@@ -38,7 +38,7 @@ final class PosterViewController: UIViewController {
     
     //MARK: - Action
     @objc private func handleSwipe(_ sender:UISwipeGestureRecognizer) {
-        presenter.swiped()
+        presenter.close()
     }
 
     //MARK: - Private methods

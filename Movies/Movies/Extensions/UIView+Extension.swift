@@ -23,11 +23,11 @@ extension UIView {
         cornerRadius = frame.height/2
     }
     
-    func addShadow(color: CGColor?,
-                   offset: CGSize = CGSize(width: 4.0, height: 3.0),
+    func addShadow(color: CGColor,
+                   offset: CGSize = CGSize(width: 6.0, height: 4.0),
                    opacity: Float = 0.8,
                    radius: CGFloat = 2) {
-        guard let color = color else { return }
+    
         layer.shadowColor = color
         layer.shadowOffset = offset
         layer.shadowRadius = radius

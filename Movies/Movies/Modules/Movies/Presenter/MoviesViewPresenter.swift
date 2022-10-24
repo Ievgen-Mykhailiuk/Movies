@@ -9,13 +9,13 @@ import UIKit
 
 protocol MoviesPresenter {
     func viewDidLoad()
-    func getSortedMovies(_ type: SortType)
-    func getMovie(for index: Int) -> MovieModel
+    func getSortedList(_ type: SortType)
+    func getItem(for index: Int) -> MovieModel
     func getItemsCount() -> Int
     func getNextPage(sort type: SortType)
     func search(text: String)
     func stopSearch()
-    func movieTapped(at index: Int)
+    func itemSelected(at index: Int)
 }
 
 final class MoviesViewPresenter {
@@ -29,11 +29,7 @@ final class MoviesViewPresenter {
     private var searchWorkItem: DispatchWorkItem?
     private var searchText: String = .empty
     private var genres = [GenreModel]()
-    private var movieListTotalPages: Int = .zero
-    private var searchResultsTotalPages: Int = .zero
-    private var movieListCurrentPage: Int = 1
-    private var searchResultsCurrentPage: Int = 1
-    
+
     private var isSearchActive: Bool {
         return !searchText.isEmpty
     }
@@ -54,14 +50,6 @@ final class MoviesViewPresenter {
         return isSearchActive ? searchResults : movies
     }
     
-    private var isNetworkAvailable: Bool = true {
-        didSet {
-            DispatchQueue.main.async {
-                self.view.updateWithNetworkStatus(isAvailable: self.isNetworkAvailable)
-            }
-        }
-    }
-    
     //MARK: - Life Cycle
     init(view: MoviesView,
          dataManager: DefaultMoviesRepository,
@@ -71,12 +59,16 @@ final class MoviesViewPresenter {
         self.router = router
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .networkStatusChanged, object: nil)
+    }
+    
     //MARK: - Private methods
     private func getGenres(completion: EmptyBlock? = nil) {
         dataManager.fetchGenres { [weak self] result in
             switch result {
-            case .success(let data):
-                self?.genres = data.genres
+            case .success(let genres):
+                self?.genres = genres
             case .failure(let error):
                 self?.view.showError(with: error.localizedDescription)
             }
@@ -96,40 +88,31 @@ final class MoviesViewPresenter {
         }
     }
     
-    private func getCoreData() {
-        dataManager.loadFromDataBase { [weak self] result in
-            switch result {
-            case .success(let movies):
-                guard let movies = movies else { return }
-                self?.movies = movies
-            case .failure(let error):
-                self?.view.showError(with: error.localizedDescription)
-            }
-        }
-    }
-
     private func localSearch() {
         searchResults = movies.filter { $0.title.lowercased().contains(self.searchText.lowercased()) }
     }
     
-    private func networkSearch() {
+    private func networkSearch(nextPage: Bool) {
         searchWorkItem?.cancel()
         let newSearchWorkItem = DispatchWorkItem {
-            if self.isLoading {
-                return
+            guard !self.isLoading else { return }
+            var page = 1
+            if nextPage {
+                if let currentPage = self.list.last?.page, let totalPages = self.list.last?.totalPages, currentPage < totalPages {
+                    page = currentPage
+                    page.increment()
+                } else {
+                    return
+                }
             }
             self.isLoading = true
-            self.dataManager.search(page: self.searchResultsCurrentPage, text: self.searchText) { [weak self] result in
-                guard let self = self else { return }
-                self.isLoading = false
+            self.dataManager.search(page: page, genres: self.genres, text: self.searchText) { [weak self] result in
+                self?.isLoading = false
                 switch result {
-                case .success(let data):
-                    let movies = data.results.map { item in MovieModel.from(networkModel: item, using: self.genres) }
-                    self.searchResultsTotalPages = data.totalPages
-                    self.searchResultsCurrentPage = data.page
-                    self.searchResults.append(contentsOf: movies)
+                case .success(let movies):
+                    self?.searchResults.append(contentsOf: movies)
                 case .failure(let error):
-                    self.view.showError(with: error.localizedDescription)
+                    self?.view.showError(with: error.localizedDescription)
                 }
             }
         }
@@ -137,38 +120,38 @@ final class MoviesViewPresenter {
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1), execute: newSearchWorkItem)
     }
     
-    private func getMovies(sortType: SortType, nextPage: Bool) {
-        if isLoading {
-            return
+    private func getMovies(sortType: SortType, nextPage: Bool, completion: EmptyBlock? = nil) {
+        guard !isLoading else { return }
+        var page = 1
+        if nextPage {
+            if let currentPage = self.list.last?.page, let totalPages = self.list.last?.totalPages, currentPage < totalPages {
+                page = currentPage
+                page.increment()
+            } else {
+                return
+            }
         }
         isLoading = true
-        dataManager.fetch(page: movieListCurrentPage, sortType: sortType) { [weak self] result in
-            guard let self = self else { return }
-            self.isLoading = false
+        dataManager.fetch(page: page, genres: self.genres, sortType: sortType) { [weak self] result in
+            self?.isLoading = false
             switch result {
-            case .success(let data):
-                let movies = data.results.map { item in
-                    MovieModel.from(networkModel: item, using: self.genres)
-                }
-                self.movieListTotalPages = data.totalPages
-                self.movieListCurrentPage = data.page
-                self.movies += movies
-                self.dataManager.saveToDataBase(movies: movies) { error in
-                    self.view.showError(with: error.localizedDescription)
-                }
+            case .success(let movies):
+                self?.movies += movies
+                completion?()
             case .failure(let error):
-                self.view.showError(with: error.localizedDescription)
+                self?.view.showError(with: error.localizedDescription)
             }
         }
     }
     
     @objc private func networkStatusChanged() {
-        if ReachabilityManager.shared.isNetworkAvailable {
-            isNetworkAvailable = true
-        } else {
-            isNetworkAvailable = false
-            view.showError(with: NetworkError.offline.localizedDescription)
-            getCoreData()
+        view.updateWithNetworkStatus(ReachabilityManager.shared.isNetworkAvailable)
+        movies.removeAll()
+        getData()
+        if !ReachabilityManager.shared.isNetworkAvailable {
+            DispatchQueue.main.async {
+                self.view.showError(with: NetworkError.offline.errorDescription)
+            }
         }
     }
 
@@ -177,7 +160,6 @@ final class MoviesViewPresenter {
                                                selector: #selector(networkStatusChanged),
                                                name: .networkStatusChanged,
                                                object: nil)
-        ReachabilityManager.shared.start()
     }
     
 }
@@ -189,18 +171,17 @@ extension MoviesViewPresenter: MoviesPresenter {
         getData()
     }
     
-    func getSortedMovies(_ type: SortType) {
-        movieListCurrentPage = 1
-        movies = []
-        getMovies(sortType: type, nextPage: false)
+    func getSortedList(_ type: SortType) {
+        movies.removeAll()
+        getMovies(sortType: type, nextPage: false) {
+            DispatchQueue.main.async {
+                self.view.scrollToTop()
+            }
+        }
     }
     
-    func getMovie(for index: Int) -> MovieModel {
-        if searchResults.isEmpty {
-            return movies[index]
-        } else {
-            return searchResults[index]
-        }
+    func getItem(for index: Int) -> MovieModel {
+        searchResults.isEmpty ? movies[index] : searchResults[index]
     }
     
     func getItemsCount() -> Int {
@@ -208,28 +189,16 @@ extension MoviesViewPresenter: MoviesPresenter {
     }
     
     func getNextPage(sort type: SortType) {
-        if isNetworkAvailable {
-            if isSearchActive {
-                if searchResultsCurrentPage < searchResultsTotalPages {
-                    searchResultsCurrentPage.increment()
-                    networkSearch()
-                }
-            } else {
-                if movieListCurrentPage < movieListTotalPages {
-                    movieListCurrentPage.increment()
-                    getMovies(sortType: type, nextPage: true)
-                }
-            }
+        if ReachabilityManager.shared.isNetworkAvailable {
+            isSearchActive ? networkSearch(nextPage: true) : getMovies(sortType: type, nextPage: true)
         }
     }
     
     func search(text: String) {
         if text.count >= minSymbolsToSearch {
-            searchResultsCurrentPage = 1
             searchText = text
-            searchResults = []
-            isNetworkAvailable ?
-            networkSearch() : localSearch()
+            searchResults.removeAll()
+            ReachabilityManager.shared.isNetworkAvailable ? networkSearch(nextPage: false) : localSearch()
         } else {
             stopSearch()
         }
@@ -237,16 +206,14 @@ extension MoviesViewPresenter: MoviesPresenter {
     
     func stopSearch() {
         searchWorkItem?.cancel()
-        searchResults = []
+        searchResults.removeAll()
         searchText = .empty
     }
     
-    func movieTapped(at index: Int) {
-        let movie = getMovie(for: index)
-        if isNetworkAvailable {
-            router.showDetails(movieID: movie.id)
-        } else {
-            view.showError(with: NetworkError.offline.localizedDescription)
-        }
+    func itemSelected(at index: Int) {
+        let movie = getItem(for: index)
+        ReachabilityManager.shared.isNetworkAvailable ?
+        router.showDetails(movieID: movie.id) :
+        view.showError(with: NetworkError.offline.errorDescription)
     }
 }

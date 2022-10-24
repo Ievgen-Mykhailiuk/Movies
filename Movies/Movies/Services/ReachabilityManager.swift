@@ -24,7 +24,7 @@ final class ReachabilityManager {
         return reachabilityStatus != .unavailable
     }
     
-    private var reachabilityStatus: Reachability.Connection = .unavailable {
+    private var reachabilityStatus: Reachability.Connection? {
         didSet {
             NotificationCenter.default.post(name: .networkStatusChanged, object: nil)
         }
@@ -37,11 +37,7 @@ final class ReachabilityManager {
                                                selector: #selector(reachabilityChanged(_:)),
                                                name: .reachabilityChanged,
                                                object: reachability)
-        do {
-            try reachability?.startNotifier()
-        } catch {
-            return
-        }
+        try? reachability?.startNotifier()
     }
     
     private func stopNotifier() {
@@ -69,6 +65,3 @@ final class ReachabilityManager {
     }
     
 }
-
-
-

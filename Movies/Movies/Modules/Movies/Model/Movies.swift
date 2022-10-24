@@ -19,22 +19,30 @@ struct MovieModel {
     let votesAverage: String
     let votesCount: String
     let overview: String
+    let page: Int?
+    let totalPages: Int?
     
-    static func from(networkModel: MovieData, using genres: [GenreModel]) -> MovieModel {
-        let genres = networkModel.genreIDS.compactMap { id in
-            genres.first(where: { $0.id == id })?.name
+    static func from(networkResponse: MovieResponse, using genres: [GenreModel]) -> [MovieModel] {
+        var movies = [MovieModel]()
+        for networkModel in networkResponse.results {
+            let genres = networkModel.genreIDS.compactMap { id in
+                genres.first(where: { $0.id == id })?.name
+            }
+            let releaseYear = Date.getYear(from: networkModel.releaseDate)
+            let movie = MovieModel(genres: genres,
+                                   id: networkModel.id,
+                                   popularity: networkModel.popularity.stringDecimalValue,
+                                   posterPath: networkModel.posterPath,
+                                   releaseYear: releaseYear,
+                                   title: networkModel.title,
+                                   votesAverage: networkModel.votesAverage.stringDecimalValue,
+                                   votesCount: networkModel.voteCount.stringValue,
+                                   overview: networkModel.overview,
+                                   page: networkResponse.page,
+                                   totalPages: networkResponse.totalPages)
+            movies.append(movie)
         }
-        let releaseYear = Date.getYear(from: networkModel.releaseDate)
-        let model = MovieModel(genres: genres,
-                               id: networkModel.id,
-                               popularity: networkModel.popularity.stringDecimalValue,
-                               posterPath: networkModel.posterPath,
-                               releaseYear: releaseYear,
-                               title: networkModel.title,
-                               votesAverage: networkModel.votesAverage.stringDecimalValue,
-                               votesCount: networkModel.voteCount.stringValue,
-                               overview: networkModel.overview)
-        return model
+        return movies
     }
     
     static func from(entity: MovieEntity) -> MovieModel {
@@ -46,7 +54,9 @@ struct MovieModel {
                                title: entity.title,
                                votesAverage: entity.votesAverage,
                                votesCount: entity.votesCount,
-                               overview: entity.overview)
+                               overview: entity.overview,
+                               page: nil,
+                               totalPages: nil)
         return model
     }
     
@@ -72,7 +82,7 @@ struct MovieResponse: Codable {
     }
     
 }
-    
+
 struct MovieData: Codable {
     
     let genreIDS: [Int]

@@ -10,7 +10,7 @@ import Foundation
 enum NetworkError: Error {
     case offline
     
-    var localizedDescription: String {
+    var errorDescription: String {
         switch self {
         case .offline:
             return  "You are offline. Please enable your Wi-Fi or connect using cellular data"

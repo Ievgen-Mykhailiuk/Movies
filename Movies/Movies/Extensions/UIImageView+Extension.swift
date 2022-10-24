@@ -12,11 +12,10 @@ extension UIImageView {
     func setImage(urlString: String,
                   placeholder: UIImage? = nil,
                   completion: EmptyBlock? = nil) {
-
+        
         ImageManager.shared.setImage(with: urlString,
-                                            for: self,
-                                            placeholder: placeholder) {
-            completion?()
-        }
+                                     for: self,
+                                     placeholder: placeholder,
+                                     completion: completion)
     }
 }

@@ -11,18 +11,25 @@ import Alamofire
 protocol NetworkService {
     func request<T: Decodable>(from endPoint: EndPoint,
                                completion: @escaping (Result<T, Error>) -> Void)
+    func cancelRequest()
 }
 
 final class DefaultNetworkService: NetworkService {
     
-    //MARK: - Network request method
+    //MARK: - Properties
+    private var request: DataRequest?
+    
+    //MARK: - Network request & cancel methods
     func request<T: Decodable>(from endPoint: EndPoint,
                                completion: @escaping (Result<T, Error>) -> Void) {
         
-        AF.request(endPoint.urlString,
-                   method: endPoint.httpMethod,
-                   parameters: endPoint.parameters,
-                   encoding: endPoint.encoding).validate(statusCode: 200..<300).responseDecodable(of: T.self) { response in
+        request = AF.request(endPoint.urlString,
+                             method: endPoint.httpMethod,
+                             parameters: endPoint.parameters,
+                             encoding: endPoint.encoding)
+        .validate(statusCode: 200..<300)
+        .responseDecodable(of: T.self) { response in
+            
             switch response.result {
             case .success(let data):
                 completion(.success(data))
@@ -31,4 +38,9 @@ final class DefaultNetworkService: NetworkService {
             }
         }
     }
+    
+    func cancelRequest() {
+        request?.cancel()
+    }
+    
 }

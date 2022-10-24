@@ -9,7 +9,7 @@ import UIKit
 
 protocol PosterPresenter {
     func viewDidLoad()
-    func swiped()
+    func close()
 }
 
 final class PosterViewPresenter {
@@ -33,7 +33,7 @@ extension PosterViewPresenter: PosterPresenter {
         view.showPoster(with: path)
     }
     
-    func swiped() {
+    func close() {
         router.close()
     }
 }

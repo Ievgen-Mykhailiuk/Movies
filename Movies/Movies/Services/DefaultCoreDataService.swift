@@ -9,8 +9,8 @@ import CoreData
 import UIKit
 
 protocol CoreDataService {
-    func load(completion: @escaping DataBaseBlock)
-    func save(movie: MovieModel, completion: @escaping ErrorBlock)
+    func load(completion: @escaping MoviesBlock)
+    func save(movie: MovieModel, completion: ErrorBlock?)
 }
 
 final class DefaultCoreDataService: CoreDataService {
@@ -58,19 +58,20 @@ final class DefaultCoreDataService: CoreDataService {
         }
     }
     
-    func load(completion: @escaping DataBaseBlock) {
+    func load(completion: @escaping MoviesBlock) {
         context.perform {
             do {
                 let movieEntities = try MovieEntity.all(context: self.context)
-                let movies = movieEntities?.map { MovieModel.from(entity: $0)}
-                completion(.success(movies))
+                if let movies = movieEntities?.map ({ MovieModel.from(entity: $0)}) {
+                    completion(.success(movies))
+                }
             } catch {
                 completion(.failure(error))
             }
         }
     }
     
-    func save(movie: MovieModel, completion: @escaping ErrorBlock) {
+    func save(movie: MovieModel, completion: ErrorBlock? = nil) {
         context.perform {
             do {
                 if let fetchResult = try MovieEntity.find(movieID: movie.id, context: self.context), fetchResult.count > 0 {
@@ -83,7 +84,7 @@ final class DefaultCoreDataService: CoreDataService {
                 }
                 self.saveContext()
             } catch {
-                completion(error)
+                completion?(error)
             }
         }
     }

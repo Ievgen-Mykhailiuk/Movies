@@ -8,8 +8,21 @@
 import Foundation
 
 enum SortType: String {
-    case nowPlaying = "now_playing"
-    case popular = "popular"
-    case topRated = "top_rated"
-    case upcoming = "upcoming"
+    case nowPlaying
+    case popular
+    case topRated
+    case upcoming
+    
+    var path: String {
+        switch self {
+        case .nowPlaying:
+            return "now_playing"
+        case .popular:
+            return "popular"
+        case .topRated:
+             return "top_rated"
+        case .upcoming:
+            return "upcoming"
+        }
+    }
 }

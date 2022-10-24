@@ -29,7 +29,7 @@ enum EndPoint {
 
 extension EndPoint: EndPointType {
     var urlString: String {
-        return baseUrl + path
+        return baseUrl + apiVersion + path
     }
     
     var httpMethod: HTTPMethod {
@@ -42,26 +42,26 @@ extension EndPoint: EndPointType {
     var baseUrl: String {
         switch self {
         case .movies, .genres, .search, .details, .trailerID:
-            return "https://api.themoviedb.org"
+            return "https://api.themoviedb.org/"
         case .poster:
-            return "https://image.tmdb.org"
+            return "https://image.tmdb.org/"
         }
     }
     
     var path: String {
         switch self {
         case .movies(let sortType, _):
-            return "/\(apiVersion)/movie/\(sortType.rawValue)"
+            return "/movie/\(sortType.path)"
         case .poster(let size, let path):
             return "/t/p/\(size.rawValue)/\(path)"
         case .genres:
-            return "/\(apiVersion)/genre/movie/list"
+            return "/genre/movie/list"
         case .search:
-            return "/\(apiVersion)/search/movie"
+            return "/search/movie"
         case .details(let movieID):
-            return "/\(apiVersion)/movie/\(movieID)"
+            return "/movie/\(movieID)"
         case .trailerID(let movieID):
-            return "/\(apiVersion)/movie/\(movieID)/videos"
+            return "/movie/\(movieID)/videos"
         }
     }
     
