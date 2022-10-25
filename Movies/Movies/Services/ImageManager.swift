@@ -12,6 +12,8 @@ final class ImageManager {
     
     static let shared = ImageManager()
     
+    private init() {}
+    
     func setImage(with urlString: String,
                   for imageView: UIImageView,
                   placeholder: UIImage?,

@@ -127,6 +127,12 @@ final class MoviesViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
+        title = "Popular Movies"
+        navigationController?.navigationBar.tintColor = Constants.appShadowColor
+        navigationController?.navigationBar.titleTextAttributes = [
+            .font: UIFont(name: Constants.appFont, size: 26) as Any,
+            .foregroundColor: Constants.appShadowColor as Any
+        ]
         navigationItem.searchController = searchBarContoller
         navigationItem.setRightBarButton(sortButton, animated: false)
     }
@@ -161,9 +167,7 @@ extension MoviesViewController: MoviesView {
     }
     
     func updateWithNetworkStatus(_ isAvailable: Bool) {
-        isAvailable ?
-        navigationItem.setRightBarButton(sortButton, animated: false) :
-        navigationItem.setRightBarButton(nil, animated: false)
+        navigationItem.setRightBarButton(isAvailable ? sortButton : nil, animated: false)
     }
     
     func scrollToTop() {
@@ -196,7 +200,7 @@ extension MoviesViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.itemSelected(at: indexPath.item)
+        presenter.didSelectItem(at: indexPath.item)
     }
 }
 

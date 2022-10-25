@@ -10,7 +10,7 @@ import UIKit
 
 protocol CoreDataService {
     func load(completion: @escaping MoviesBlock)
-    func save(movie: MovieModel, completion: ErrorBlock?)
+    func save(movies: [MovieModel], completion: ErrorBlock?)
 }
 
 final class DefaultCoreDataService: CoreDataService {
@@ -32,7 +32,10 @@ final class DefaultCoreDataService: CoreDataService {
     private lazy var context: NSManagedObjectContext = {
         return persistentContainer.viewContext
     }()
-        
+    
+    //MARK: - Life Cycle
+    private init() {}
+    
     //MARK: - Private methods
     private func saveEntity(_ entity: MovieEntity, using movie: MovieModel) {
         entity.setValue(movie.genres, forKey: "genres")
@@ -71,16 +74,18 @@ final class DefaultCoreDataService: CoreDataService {
         }
     }
     
-    func save(movie: MovieModel, completion: ErrorBlock? = nil) {
+    func save(movies: [MovieModel], completion: ErrorBlock? = nil) {
         context.perform {
             do {
-                if let fetchResult = try MovieEntity.find(movieID: movie.id, context: self.context), fetchResult.count > 0 {
-                    assert(fetchResult.count == 1, "Duplicate has found in DB")
-                    let movieEntity = fetchResult[0]
-                    self.saveEntity(movieEntity, using: movie)
-                } else {
-                    let newMovieEntity = MovieEntity(context: self.context)
-                    self.saveEntity(newMovieEntity, using: movie)
+                for movie in movies {
+                    if let fetchResult = try MovieEntity.find(movieID: movie.id, context: self.context), fetchResult.count > 0 {
+                        assert(fetchResult.count == 1, "Duplicate has found in DB")
+                        let movieEntity = fetchResult[0]
+                        self.saveEntity(movieEntity, using: movie)
+                    } else {
+                        let newMovieEntity = MovieEntity(context: self.context)
+                        self.saveEntity(newMovieEntity, using: movie)
+                    }
                 }
                 self.saveContext()
             } catch {

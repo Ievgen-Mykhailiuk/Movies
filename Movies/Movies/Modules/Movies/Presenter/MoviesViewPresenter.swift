@@ -15,7 +15,7 @@ protocol MoviesPresenter {
     func getNextPage(sort type: SortType)
     func search(text: String)
     func stopSearch()
-    func itemSelected(at index: Int)
+    func didSelectItem(at index: Int)
 }
 
 final class MoviesViewPresenter {
@@ -60,7 +60,7 @@ final class MoviesViewPresenter {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .networkStatusChanged, object: nil)
+        removeNetworkStateObserver()
     }
     
     //MARK: - Private methods
@@ -84,26 +84,25 @@ final class MoviesViewPresenter {
     
     private func getData() {
         getGenres {
-            self.getMovies(sortType: .popular, nextPage: false)
+            self.getMovies(sortType: .popular, isNextPageNeeded: false)
         }
     }
     
     private func localSearch() {
         searchResults = movies.filter { $0.title.lowercased().contains(self.searchText.lowercased()) }
     }
-    
-    private func networkSearch(nextPage: Bool) {
+
+    private func networkSearch(isNextPageNeeded: Bool) {
         searchWorkItem?.cancel()
         let newSearchWorkItem = DispatchWorkItem {
             guard !self.isLoading else { return }
             var page = 1
-            if nextPage {
-                if let currentPage = self.list.last?.page, let totalPages = self.list.last?.totalPages, currentPage < totalPages {
-                    page = currentPage
-                    page.increment()
-                } else {
-                    return
-                }
+            if isNextPageNeeded {
+                guard let currentPage = self.list.last?.page,
+                      let totalPages = self.list.last?.totalPages,
+                      currentPage < totalPages else { return }
+                page = currentPage
+                page.increment()
             }
             self.isLoading = true
             self.dataManager.search(page: page, genres: self.genres, text: self.searchText) { [weak self] result in
@@ -120,16 +119,15 @@ final class MoviesViewPresenter {
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1), execute: newSearchWorkItem)
     }
     
-    private func getMovies(sortType: SortType, nextPage: Bool, completion: EmptyBlock? = nil) {
+    private func getMovies(sortType: SortType, isNextPageNeeded: Bool, completion: EmptyBlock? = nil) {
         guard !isLoading else { return }
         var page = 1
-        if nextPage {
-            if let currentPage = self.list.last?.page, let totalPages = self.list.last?.totalPages, currentPage < totalPages {
-                page = currentPage
-                page.increment()
-            } else {
-                return
-            }
+        if isNextPageNeeded {
+            guard let currentPage = list.last?.page,
+                  let totalPages = list.last?.totalPages,
+                  currentPage < totalPages else { return }
+            page = currentPage
+            page.increment()
         }
         isLoading = true
         dataManager.fetch(page: page, genres: self.genres, sortType: sortType) { [weak self] result in
@@ -153,11 +151,17 @@ final class MoviesViewPresenter {
         }
     }
     
-    private func startNetworkMonitoring() {
+    private func addNetworkStateObserver() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(networkStatusChanged),
                                                name: .networkStatusChanged,
                                                object: nil)
+    }
+    
+    private func removeNetworkStateObserver() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .networkStatusChanged,
+                                                  object: nil)
     }
     
 }
@@ -165,13 +169,13 @@ final class MoviesViewPresenter {
 //MARK: - MoviesPresenterProtocol
 extension MoviesViewPresenter: MoviesPresenter {
     func viewDidLoad() {
-        startNetworkMonitoring()
+        addNetworkStateObserver()
         getData()
     }
     
     func getSortedList(_ type: SortType) {
         movies.removeAll()
-        getMovies(sortType: type, nextPage: false) {
+        getMovies(sortType: type, isNextPageNeeded: false) {
             DispatchQueue.main.async {
                 self.view.scrollToTop()
             }
@@ -188,7 +192,9 @@ extension MoviesViewPresenter: MoviesPresenter {
     
     func getNextPage(sort type: SortType) {
         if ReachabilityManager.shared.isNetworkAvailable {
-            isSearchActive ? networkSearch(nextPage: true) : getMovies(sortType: type, nextPage: true)
+            isSearchActive ?
+            networkSearch(isNextPageNeeded: true) :
+            getMovies(sortType: type, isNextPageNeeded: true)
         }
     }
     
@@ -196,7 +202,9 @@ extension MoviesViewPresenter: MoviesPresenter {
         if text.count >= minSymbolsToSearch {
             searchText = text
             searchResults.removeAll()
-            ReachabilityManager.shared.isNetworkAvailable ? networkSearch(nextPage: false) : localSearch()
+            ReachabilityManager.shared.isNetworkAvailable ?
+            networkSearch(isNextPageNeeded: false) :
+            localSearch()
         } else {
             stopSearch()
         }
@@ -208,10 +216,10 @@ extension MoviesViewPresenter: MoviesPresenter {
         searchText = .empty
     }
     
-    func itemSelected(at index: Int) {
+    func didSelectItem(at index: Int) {
         let movie = getItem(for: index)
         ReachabilityManager.shared.isNetworkAvailable ?
-        router.showDetails(for: movie):
+        router.showDetails(for: movie) :
         view.showError(with: NetworkError.offline.errorDescription)
     }
 }

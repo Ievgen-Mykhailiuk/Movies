@@ -20,13 +20,7 @@ final class DefaultMoviesAssembly: MoviesAssembly {
                                             dataManager: dataManager,
                                             router: router)
         view.presenter = presenter
-        view.title = "Popular Movies"
         let navigationController = UINavigationController(rootViewController: view)
-        navigationController.navigationBar.tintColor = Constants.appShadowColor
-        navigationController.navigationBar.titleTextAttributes = [
-            .font: UIFont(name: Constants.appFont, size: 30) as Any,
-            .foregroundColor: Constants.appShadowColor as Any
-        ]
         return navigationController
     }
 }

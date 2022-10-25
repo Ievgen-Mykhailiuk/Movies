@@ -30,6 +30,9 @@ final class ReachabilityManager {
         }
     }
     
+    //MARK: - Life Cycle
+    private init() {}
+    
     //MARK: - Private methods
     private func startNotifier() {
         reachability = try? Reachability()
