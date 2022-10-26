@@ -26,6 +26,8 @@ final class MoviesViewController: UIViewController {
     private let itemsLeftToNextPage: Int = 2
     private let estimatedCellHeight: CGFloat = 200
     private let padding: CGFloat = 15
+    private let titleFontSize: CGFloat = 26
+    private let listTitle: String = "Popular Movies"
     
     private lazy var layout: UICollectionViewCompositionalLayout = {
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
@@ -127,10 +129,10 @@ final class MoviesViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        title = "Popular Movies"
+        title = listTitle
         navigationController?.navigationBar.tintColor = Constants.appShadowColor
         navigationController?.navigationBar.titleTextAttributes = [
-            .font: UIFont(name: Constants.appFont, size: 26) as Any,
+            .font: UIFont(name: Constants.appFont, size: titleFontSize) as Any,
             .foregroundColor: Constants.appShadowColor as Any
         ]
         navigationItem.searchController = searchBarContoller
