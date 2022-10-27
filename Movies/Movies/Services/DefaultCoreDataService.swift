@@ -10,7 +10,8 @@ import UIKit
 
 protocol CoreDataService {
     func load(completion: @escaping MoviesBlock)
-    func save(movies: [MovieModel], completion: ErrorBlock?)
+    func save(_ movies: [MovieModel], completion: ErrorBlock?)
+    func search(_ searchText: String, completion: @escaping MoviesBlock)
 }
 
 final class DefaultCoreDataService: CoreDataService {
@@ -74,11 +75,24 @@ final class DefaultCoreDataService: CoreDataService {
         }
     }
     
-    func save(movies: [MovieModel], completion: ErrorBlock? = nil) {
+    func search(_ searchText: String, completion: @escaping MoviesBlock) {
+        context.perform {
+            do {
+                let fetchResult = try MovieEntity.find(in: .title(searchText), context: self.context)
+                if let movies = fetchResult?.map ({ MovieModel.from(entity: $0)}) {
+                    completion(.success(movies))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func save(_ movies: [MovieModel], completion: ErrorBlock? = nil) {
         context.perform {
             do {
                 for movie in movies {
-                    if let fetchResult = try MovieEntity.find(movieID: movie.id, context: self.context), fetchResult.count > 0 {
+                    if let fetchResult = try MovieEntity.find(in: .id(movie.id), context: self.context), fetchResult.count > 0 {
                         assert(fetchResult.count == 1, "Duplicate has found in DB")
                         let movieEntity = fetchResult[0]
                         self.saveEntity(movieEntity, using: movie)
@@ -95,5 +109,3 @@ final class DefaultCoreDataService: CoreDataService {
     }
 
 }
-
-

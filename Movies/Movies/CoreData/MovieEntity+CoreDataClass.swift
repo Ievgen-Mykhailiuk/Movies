@@ -9,12 +9,11 @@
 import Foundation
 import CoreData
 
-
 public class MovieEntity: NSManagedObject {
-    
-    class func find(movieID: Int, context: NSManagedObjectContext) throws -> [MovieEntity]? {
+        
+    class func find(in attribute: SearchAttribute, context: NSManagedObjectContext) throws -> [MovieEntity]? {
         let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %d", movieID)
+        request.predicate = attribute.predicate
         do {
             let fetchResult = try context.fetch(request)
             return fetchResult
@@ -22,7 +21,7 @@ public class MovieEntity: NSManagedObject {
             throw error
         }
     }
-    
+
     class func all(context: NSManagedObjectContext) throws -> [MovieEntity]? {
         let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
         do {

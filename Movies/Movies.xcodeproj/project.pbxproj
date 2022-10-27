@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FC5515EA28FEC39D00EE70F8 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = FC5515E928FEC39D00EE70F8 /* Reachability */; };
+		FC734400290AA6550088CDE6 /* SearchAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */; };
 		FCD9FCEC28E1915B001968ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEB28E1915B001968ED /* AppDelegate.swift */; };
 		FCD9FCEE28E1915B001968ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCED28E1915B001968ED /* SceneDelegate.swift */; };
 		FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEF28E1915B001968ED /* MoviesViewController.swift */; };
@@ -64,6 +65,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAttribute.swift; sourceTree = "<group>"; };
 		FCD9FCE828E1915B001968ED /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD9FCEB28E1915B001968ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD9FCED28E1915B001968ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				FCD9FE0A28F84A34001968ED /* PosterSize.swift */,
 				FCD9FE0C28F84A6E001968ED /* SortType.swift */,
 				FCD9FE0E28F84D6C001968ED /* NetworkError.swift */,
+				FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -485,6 +488,7 @@
 				FCD9FD5328E196C7001968ED /* DetailsViewPresenter.swift in Sources */,
 				FCD9FDCB28F42ECF001968ED /* Double+Extension.swift in Sources */,
 				FCD9FDC528F1DB91001968ED /* Trailer.swift in Sources */,
+				FC734400290AA6550088CDE6 /* SearchAttribute.swift in Sources */,
 				FCD9FD3828E1941B001968ED /* EndPoint.swift in Sources */,
 				FCD9FE0B28F84A34001968ED /* PosterSize.swift in Sources */,
 				FCD9FD2928E1936B001968ED /* CollectionCellDequeueable.swift in Sources */,
@@ -641,14 +645,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C5PN73MFP3;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Movies/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -660,6 +666,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.IM88.Movies;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -671,14 +678,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C5PN73MFP3;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Movies/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -690,6 +699,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.IM88.Movies;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

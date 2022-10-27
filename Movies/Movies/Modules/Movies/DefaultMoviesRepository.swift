@@ -10,7 +10,7 @@ import UIKit
 protocol MoviesRepository {
     func fetch(page: Int, genres: [GenreModel], sortType: SortType, completion: @escaping MoviesBlock)
     func fetchGenres(completion: @escaping GenresBlock)
-    func search(page: Int, genres: [GenreModel], text: String, completion: @escaping MoviesBlock)
+    func search(_ searchText: String, page: Int, genres: [GenreModel], completion: @escaping MoviesBlock)
 }
 
 final class DefaultMoviesRepository: MoviesRepository {
@@ -27,32 +27,45 @@ final class DefaultMoviesRepository: MoviesRepository {
     }
     
     //MARK: - Private Methods
-    private func moviesFrom(_ data: MovieResponse, using genres: [GenreModel]) -> [MovieModel] {
-        return data.results.compactMap { networkModel in
+    private func prepareMovieList(from response: MovieResponse, by genres: [GenreModel]) -> [MovieModel] {
+        return response.results.compactMap { networkModel in
             var movie = MovieModel.from(networkModel: networkModel)
             let genres = networkModel.genreIDS.compactMap { id in
                 genres.first(where: { $0.id == id })?.name
             }
-            movie.page = data.page
-            movie.totalPages = data.totalPages
+            movie.page = response.page
+            movie.totalPages = response.totalPages
             movie.genres = genres
             return movie
         }
     }
     
     //MARK: - Protocol Methods
-    func search(page: Int, genres: [GenreModel], text: String, completion: @escaping MoviesBlock) {
-        networkService.cancelRequest()
-        networkService.request(from: .search(page: page, text: text)) { (result: Result<MovieResponse, Error>) in
-            switch result {
-            case .success(let data):
-                let movies = self.moviesFrom(data, using: genres)
-                self.coreDataService.save(movies: movies) { error in
+    func search(_ searchText: String, page: Int, genres: [GenreModel], completion: @escaping MoviesBlock) {
+        if ReachabilityManager.shared.isNetworkAvailable {
+            networkService.cancelRequest()
+            networkService.request(from: .search(page: page, text: searchText)) {
+                [weak self] (result: Result<MovieResponse, Error>)  in
+                guard let self = self else { return }
+                switch result {
+                case .success(let data):
+                    let movies = self.prepareMovieList(from: data, by: genres)
+                    self.coreDataService.save(movies) { error in
+                        completion(.failure(error))
+                    }
+                    completion(.success(movies))
+                case .failure(let error):
                     completion(.failure(error))
                 }
-                completion(.success(movies))
-            case .failure(let error):
-                completion(.failure(error))
+            }
+        } else {
+            coreDataService.search(searchText) { (result: Result<[MovieModel], Error>) in
+                switch result {
+                case .success(let movies):
+                    completion(.success(movies))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -70,11 +83,13 @@ final class DefaultMoviesRepository: MoviesRepository {
     
     func fetch(page: Int, genres: [GenreModel], sortType: SortType, completion: @escaping MoviesBlock) {
         if ReachabilityManager.shared.isNetworkAvailable {
-            networkService.request(from: .movies(sortType: sortType, page: page)) { (result: Result<MovieResponse, Error>)  in
+            networkService.request(from: .movies(sortType: sortType, page: page)) {
+                [weak self] (result: Result<MovieResponse, Error>)  in
+                guard let self = self else { return }
                 switch result {
                 case .success(let data):
-                    let movies = self.moviesFrom(data, using: genres)
-                    self.coreDataService.save(movies: movies) { error in
+                    let movies = self.prepareMovieList(from: data, by: genres)
+                    self.coreDataService.save(movies) { error in
                         completion(.failure(error))
                     }
                     completion(.success(movies))

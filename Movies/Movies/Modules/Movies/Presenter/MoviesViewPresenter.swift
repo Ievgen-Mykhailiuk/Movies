@@ -84,20 +84,16 @@ final class MoviesViewPresenter {
     
     private func getData() {
         getGenres {
-            self.getMovies(sortType: .popular, isNextPageNeeded: false)
+            self.getMovies(sortType: .popular, hasNextPage: false)
         }
     }
     
-    private func localSearch() {
-        searchResults = movies.filter { $0.title.lowercased().contains(self.searchText.lowercased()) }
-    }
-
-    private func networkSearch(isNextPageNeeded: Bool) {
+    private func getSearchResults(hasNextPage: Bool) {
         searchWorkItem?.cancel()
         let newSearchWorkItem = DispatchWorkItem {
             guard !self.isLoading else { return }
             var page = 1
-            if isNextPageNeeded {
+            if hasNextPage {
                 guard let currentPage = self.list.last?.page,
                       let totalPages = self.list.last?.totalPages,
                       currentPage < totalPages else { return }
@@ -105,7 +101,7 @@ final class MoviesViewPresenter {
                 page.increment()
             }
             self.isLoading = true
-            self.dataManager.search(page: page, genres: self.genres, text: self.searchText) { [weak self] result in
+            self.dataManager.search(self.searchText, page: page, genres: self.genres) { [weak self] result in
                 self?.isLoading = false
                 switch result {
                 case .success(let movies):
@@ -116,13 +112,13 @@ final class MoviesViewPresenter {
             }
         }
         searchWorkItem = newSearchWorkItem
-        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1), execute: newSearchWorkItem)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: newSearchWorkItem)
     }
-    
-    private func getMovies(sortType: SortType, isNextPageNeeded: Bool, completion: EmptyBlock? = nil) {
+     
+    private func getMovies(sortType: SortType, hasNextPage: Bool, completion: EmptyBlock? = nil) {
         guard !isLoading else { return }
         var page = 1
-        if isNextPageNeeded {
+        if hasNextPage {
             guard let currentPage = list.last?.page,
                   let totalPages = list.last?.totalPages,
                   currentPage < totalPages else { return }
@@ -175,7 +171,7 @@ extension MoviesViewPresenter: MoviesPresenter {
     
     func getSortedList(_ type: SortType) {
         movies.removeAll()
-        getMovies(sortType: type, isNextPageNeeded: false) {
+        getMovies(sortType: type, hasNextPage: false) {
             DispatchQueue.main.async {
                 self.view.scrollToTop()
             }
@@ -193,8 +189,8 @@ extension MoviesViewPresenter: MoviesPresenter {
     func getNextPage(sort type: SortType) {
         if ReachabilityManager.shared.isNetworkAvailable {
             isSearchActive ?
-            networkSearch(isNextPageNeeded: true) :
-            getMovies(sortType: type, isNextPageNeeded: true)
+            getSearchResults(hasNextPage: true) :
+            getMovies(sortType: type, hasNextPage: true)
         }
     }
     
@@ -202,9 +198,7 @@ extension MoviesViewPresenter: MoviesPresenter {
         if text.count >= minSymbolsToSearch {
             searchText = text
             searchResults.removeAll()
-            ReachabilityManager.shared.isNetworkAvailable ?
-            networkSearch(isNextPageNeeded: false) :
-            localSearch()
+            getSearchResults(hasNextPage: false)
         } else {
             stopSearch()
         }
