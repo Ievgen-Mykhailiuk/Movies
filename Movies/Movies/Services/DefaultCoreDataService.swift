@@ -65,7 +65,7 @@ final class DefaultCoreDataService: CoreDataService {
     func load(completion: @escaping MoviesBlock) {
         context.perform {
             do {
-                let movieEntities = try MovieEntity.all(context: self.context)
+                let movieEntities: [MovieEntity]? = try MovieEntity.all(in: self.context)
                 if let movies = movieEntities?.map ({ MovieModel.from(entity: $0)}) {
                     completion(.success(movies))
                 }
@@ -78,7 +78,8 @@ final class DefaultCoreDataService: CoreDataService {
     func search(_ searchText: String, completion: @escaping MoviesBlock) {
         context.perform {
             do {
-                let fetchResult = try MovieEntity.find(in: .title(searchText), context: self.context)
+                let predicate = SearchAttribute.title(searchText).predicate
+                let fetchResult: [MovieEntity]? = try MovieEntity.find(in: self.context, with: predicate)
                 if let movies = fetchResult?.map ({ MovieModel.from(entity: $0)}) {
                     completion(.success(movies))
                 }
@@ -92,7 +93,9 @@ final class DefaultCoreDataService: CoreDataService {
         context.perform {
             do {
                 for movie in movies {
-                    if let fetchResult = try MovieEntity.find(in: .id(movie.id), context: self.context), fetchResult.count > 0 {
+                    let predicate = SearchAttribute.id(movie.id).predicate
+                    if let fetchResult: [MovieEntity] = try MovieEntity.find(in: self.context, with: predicate),
+                       fetchResult.count > 0 {
                         assert(fetchResult.count == 1, "Duplicate has found in DB")
                         let movieEntity = fetchResult[0]
                         self.saveEntity(movieEntity, using: movie)

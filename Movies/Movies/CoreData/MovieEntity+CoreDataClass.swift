@@ -9,27 +9,38 @@
 import Foundation
 import CoreData
 
-public class MovieEntity: NSManagedObject {
-        
-    class func find(in attribute: SearchAttribute, context: NSManagedObjectContext) throws -> [MovieEntity]? {
-        let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        request.predicate = attribute.predicate
-        do {
-            let fetchResult = try context.fetch(request)
-            return fetchResult
-        } catch {
-            throw error
-        }
-    }
+protocol EntityType {
+    static func all<T: NSManagedObject>(in context: NSManagedObjectContext) throws -> [T]?
+    static func find<T: NSManagedObject>(in context: NSManagedObjectContext,
+                                         with predicate: NSPredicate?) throws -> [T]?
+}
 
-    class func all(context: NSManagedObjectContext) throws -> [MovieEntity]? {
-        let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
+extension EntityType {
+    static func all<T: NSManagedObject>(in context: NSManagedObjectContext) throws -> [T]? {
+        let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
+        fetchRequest.entity = T.entity()
         do {
-            let fetchResult = try context.fetch(request)
+            let fetchResult = try context.fetch(fetchRequest)
             return fetchResult
         } catch {
             throw error
         }
     }
+    
+    static func find<T: NSManagedObject>(in context: NSManagedObjectContext,
+                                         with predicate: NSPredicate?) throws -> [T]? {
+        let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
+        fetchRequest.entity = T.entity()
+        fetchRequest.predicate = predicate
+        do {
+            let fetchResult = try context.fetch(fetchRequest)
+            return fetchResult
+        } catch {
+            throw error
+        }
+    }
+}
+
+public class MovieEntity: NSManagedObject {
 
 }

@@ -11,7 +11,7 @@ enum SearchAttribute {
     case id(Int)
     case title(String)
     
-    var predicate: NSPredicate {
+    var predicate: NSPredicate? {
         switch self {
         case .id(let id):
             return  .init(format: "id == %d", id)
