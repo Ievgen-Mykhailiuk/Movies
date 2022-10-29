@@ -9,26 +9,18 @@
 import Foundation
 import CoreData
 
-protocol EntityType {
-    static func all<T: NSManagedObject>(in context: NSManagedObjectContext) throws -> [T]?
-    static func find<T: NSManagedObject>(in context: NSManagedObjectContext,
-                                         with predicate: NSPredicate?) throws -> [T]?
+protocol EntityType: NSManagedObject {
+    
+    var identifier: Int { get }
+    static func fetch<T: NSManagedObject>(in context: NSManagedObjectContext,
+                                          predicate: NSPredicate?) throws -> [T]
+    
 }
 
 extension EntityType {
-    static func all<T: NSManagedObject>(in context: NSManagedObjectContext) throws -> [T]? {
-        let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
-        fetchRequest.entity = T.entity()
-        do {
-            let fetchResult = try context.fetch(fetchRequest)
-            return fetchResult
-        } catch {
-            throw error
-        }
-    }
-    
-    static func find<T: NSManagedObject>(in context: NSManagedObjectContext,
-                                         with predicate: NSPredicate?) throws -> [T]? {
+
+    static func fetch<T: NSManagedObject>(in context: NSManagedObjectContext,
+                                          predicate: NSPredicate?) throws -> [T] {
         let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
         fetchRequest.entity = T.entity()
         fetchRequest.predicate = predicate
@@ -39,8 +31,27 @@ extension EntityType {
             throw error
         }
     }
+    
 }
 
-public class MovieEntity: NSManagedObject {
-
+public class MovieEntity: NSManagedObject, EntityType {
+    
+    var identifier: Int {
+        return self.id.intValue
+    }
+    
+    class func from(model: MovieModel) -> MovieEntity {
+        let entity = MovieEntity(context: DefaultCoreDataService.shared.context)
+        entity.setValue(model.genres, forKey: "genres")
+        entity.setValue(model.id, forKey: "id")
+        entity.setValue(model.overview, forKey: "overview")
+        entity.setValue(model.popularity, forKey: "popularity")
+        entity.setValue(model.posterPath, forKey: "posterPath")
+        entity.setValue(model.releaseYear, forKey: "releaseYear")
+        entity.setValue(model.title, forKey: "title")
+        entity.setValue(model.votesAverage, forKey: "votesAverage")
+        entity.setValue(model.votesCount, forKey: "votesCount")
+        return entity
+    }
+    
 }

@@ -6,15 +6,17 @@
 //
 
 import CoreData
-import UIKit
+import Foundation
 
 protocol CoreDataService {
-    func load(completion: @escaping MoviesBlock)
-    func save(_ movies: [MovieModel], completion: ErrorBlock?)
-    func search(_ searchText: String, completion: @escaping MoviesBlock)
+    
+    func all<T: EntityType>(completion: @escaping (Result<[T], Error>) -> Void)
+    func save<T: EntityType>(_ entities: [T], completion: ErrorBlock?)
+    func search<T: EntityType>(_ searchText: String, completion: @escaping (Result<[T], Error>) -> Void)
+    
 }
 
-final class DefaultCoreDataService: CoreDataService {
+final class DefaultCoreDataService {
     
     //MARK: - Singleton
     static let shared = DefaultCoreDataService()
@@ -29,28 +31,14 @@ final class DefaultCoreDataService: CoreDataService {
         })
         return container
     }()
-    
-    private lazy var context: NSManagedObjectContext = {
+    lazy var context: NSManagedObjectContext = {
         return persistentContainer.viewContext
     }()
     
     //MARK: - Life Cycle
     private init() {}
     
-    //MARK: - Private methods
-    private func saveEntity(_ entity: MovieEntity, using movie: MovieModel) {
-        entity.setValue(movie.genres, forKey: "genres")
-        entity.setValue(movie.id, forKey: "id")
-        entity.setValue(movie.overview, forKey: "overview")
-        entity.setValue(movie.popularity, forKey: "popularity")
-        entity.setValue(movie.posterPath, forKey: "posterPath")
-        entity.setValue(movie.releaseYear, forKey: "releaseYear")
-        entity.setValue(movie.title, forKey: "title")
-        entity.setValue(movie.votesAverage, forKey: "votesAverage")
-        entity.setValue(movie.votesCount, forKey: "votesCount")
-    }
-    
-    // MARK: - Core Data Saving & Loading support
+    // MARK: - Core Data Saving Support
     func saveContext () {
         if context.hasChanges {
             do {
@@ -62,47 +50,31 @@ final class DefaultCoreDataService: CoreDataService {
         }
     }
     
-    func load(completion: @escaping MoviesBlock) {
+}
+
+//MARK: - CoreDataServiceProtocol
+extension DefaultCoreDataService: CoreDataService {
+    
+    func all<T: EntityType>(completion: @escaping (Result<[T], Error>) -> Void) {
         context.perform {
             do {
-                let movieEntities: [MovieEntity]? = try MovieEntity.all(in: self.context)
-                if let movies = movieEntities?.map ({ MovieModel.from(entity: $0)}) {
-                    completion(.success(movies))
-                }
+                let entities: [T] = try T.fetch(in: self.context, predicate: nil)
+                completion(.success(entities))
             } catch {
                 completion(.failure(error))
             }
         }
     }
     
-    func search(_ searchText: String, completion: @escaping MoviesBlock) {
+    func save<T: EntityType>(_ entities: [T], completion: ErrorBlock?) {
         context.perform {
             do {
-                let predicate = SearchAttribute.title(searchText).predicate
-                let fetchResult: [MovieEntity]? = try MovieEntity.find(in: self.context, with: predicate)
-                if let movies = fetchResult?.map ({ MovieModel.from(entity: $0)}) {
-                    completion(.success(movies))
-                }
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func save(_ movies: [MovieModel], completion: ErrorBlock? = nil) {
-        context.perform {
-            do {
-                for movie in movies {
-                    let predicate = SearchAttribute.id(movie.id).predicate
-                    if let fetchResult: [MovieEntity] = try MovieEntity.find(in: self.context, with: predicate),
-                       fetchResult.count > 0 {
-                        assert(fetchResult.count == 1, "Duplicate has found in DB")
-                        let movieEntity = fetchResult[0]
-                        self.saveEntity(movieEntity, using: movie)
-                    } else {
-                        let newMovieEntity = MovieEntity(context: self.context)
-                        self.saveEntity(newMovieEntity, using: movie)
-                    }
+                for entity in entities {
+                    let predicate = SearchAttribute.id(entity.identifier).predicate
+                    let fetchResult: [T] = try T.fetch(in: self.context, predicate: predicate)
+                    fetchResult
+                        .filter { item in item !== entity }
+                        .forEach { self.context.delete($0) }
                 }
                 self.saveContext()
             } catch {
@@ -110,5 +82,17 @@ final class DefaultCoreDataService: CoreDataService {
             }
         }
     }
-
+    
+    func search<T: EntityType>(_ searchText: String, completion: @escaping (Result<[T], Error>) -> Void) {
+        context.perform {
+            do {
+                let predicate = SearchAttribute.title(searchText).predicate
+                let fetchResult: [T] = try T.fetch(in: self.context, predicate: predicate)
+                completion(.success(fetchResult))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
 }

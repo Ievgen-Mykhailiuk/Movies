@@ -28,7 +28,7 @@ final class DefaultMoviesRepository: MoviesRepository {
     
     //MARK: - Private Methods
     private func prepareMovieList(from response: MovieResponse, by genres: [GenreModel]) -> [MovieModel] {
-        return response.results.compactMap { networkModel in
+        return response.results.map { networkModel in
             var movie = MovieModel.from(networkModel: networkModel)
             let genres = networkModel.genreIDS.compactMap { id in
                 genres.first(where: { $0.id == id })?.name
@@ -50,7 +50,7 @@ final class DefaultMoviesRepository: MoviesRepository {
                 switch result {
                 case .success(let data):
                     let movies = self.prepareMovieList(from: data, by: genres)
-                    self.coreDataService.save(movies) { error in
+                    self.coreDataService.save(movies.map { MovieEntity.from(model: $0) }) { error in
                         completion(.failure(error))
                     }
                     completion(.success(movies))
@@ -59,10 +59,10 @@ final class DefaultMoviesRepository: MoviesRepository {
                 }
             }
         } else {
-            coreDataService.search(searchText) { (result: Result<[MovieModel], Error>) in
+            coreDataService.search(searchText) { (result: Result<[MovieEntity], Error>) in
                 switch result {
-                case .success(let movies):
-                    completion(.success(movies))
+                case .success(let entities):
+                    completion(.success(entities.map { MovieModel.from(entity: $0) }))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -89,7 +89,7 @@ final class DefaultMoviesRepository: MoviesRepository {
                 switch result {
                 case .success(let data):
                     let movies = self.prepareMovieList(from: data, by: genres)
-                    self.coreDataService.save(movies) { error in
+                    self.coreDataService.save(movies.map { MovieEntity.from(model: $0) }) { error in
                         completion(.failure(error))
                     }
                     completion(.success(movies))
@@ -98,10 +98,10 @@ final class DefaultMoviesRepository: MoviesRepository {
                 }
             }
         } else {
-            coreDataService.load { (result: Result<[MovieModel], Error>) in
+            coreDataService.all { (result: Result<[MovieEntity], Error>) in
                 switch result {
-                case .success(let movies):
-                    completion(.success(movies))
+                case .success(let entities):
+                    completion(.success(entities.map { MovieModel.from(entity: $0) }))
                 case .failure(let error):
                     completion(.failure(error))
                 }

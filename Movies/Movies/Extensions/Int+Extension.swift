@@ -15,5 +15,11 @@ extension Int {
     
     mutating func increment() {
        self += 1
-    }   
+    }
+}
+
+extension Int64 {
+    var intValue: Int {
+        return Int(self)
+    }
 }

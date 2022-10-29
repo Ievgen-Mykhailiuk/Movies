@@ -9,7 +9,7 @@ import UIKit
 
 //MARK: - UI Movie Model
 struct MovieModel {
-    
+
     var genres: [String] = []
     let id: Int
     let popularity: String
@@ -36,7 +36,7 @@ struct MovieModel {
     
     static func from(entity: MovieEntity) -> MovieModel {
         let model = MovieModel(genres: entity.genres,
-                               id: Int(entity.id),
+                               id: entity.id.intValue,
                                popularity: entity.popularity,
                                posterPath: entity.posterPath,
                                releaseYear: entity.releaseYear,

@@ -31,7 +31,3 @@ extension MovieEntity {
 extension MovieEntity: Identifiable {
 
 }
-
-extension MovieEntity: EntityType {
-    
-}
