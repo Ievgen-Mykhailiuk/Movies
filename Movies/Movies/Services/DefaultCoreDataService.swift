@@ -58,8 +58,8 @@ extension DefaultCoreDataService: CoreDataService {
     func all<T: EntityType>(completion: @escaping (Result<[T], Error>) -> Void) {
         context.perform {
             do {
-                let entities: [T] = try T.fetch(in: self.context, predicate: nil)
-                completion(.success(entities))
+                let fetchResult: [T] = try T.fetch(in: self.context, predicate: nil)
+                completion(.success(fetchResult))
             } catch {
                 completion(.failure(error))
             }
