@@ -98,7 +98,7 @@ final class DefaultMoviesRepository: MoviesRepository {
                 }
             }
         } else {
-            coreDataService.all { (result: Result<[MovieEntity], Error>) in
+            coreDataService.fetchAll { (result: Result<[MovieEntity], Error>) in
                 switch result {
                 case .success(let entities):
                     completion(.success(entities.map { MovieModel.from(entity: $0) }))

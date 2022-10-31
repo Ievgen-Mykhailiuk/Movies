@@ -27,7 +27,3 @@ extension MovieEntity {
     @NSManaged public var votesCount: String
 
 }
-
-extension MovieEntity: Identifiable {
-
-}

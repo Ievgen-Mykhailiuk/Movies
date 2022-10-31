@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-protocol EntityType: NSManagedObject {
+protocol Fetchable: NSManagedObject {
     
     var identifier: Int { get }
     static func fetch<T: NSManagedObject>(in context: NSManagedObjectContext,
@@ -17,11 +17,11 @@ protocol EntityType: NSManagedObject {
     
 }
 
-extension EntityType {
+extension Fetchable {
 
     static func fetch<T: NSManagedObject>(in context: NSManagedObjectContext,
                                           predicate: NSPredicate?) throws -> [T] {
-        let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as! NSFetchRequest<T>
+        let fetchRequest = T.fetchRequest() as! NSFetchRequest<T>
         fetchRequest.entity = T.entity()
         fetchRequest.predicate = predicate
         do {
@@ -34,7 +34,7 @@ extension EntityType {
     
 }
 
-public class MovieEntity: NSManagedObject, EntityType {
+public final class MovieEntity: NSManagedObject, Fetchable {
     
     var identifier: Int {
         return self.id.intValue

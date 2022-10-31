@@ -10,9 +10,9 @@ import Foundation
 
 protocol CoreDataService {
     
-    func all<T: EntityType>(completion: @escaping (Result<[T], Error>) -> Void)
-    func save<T: EntityType>(_ entities: [T], completion: ErrorBlock?)
-    func search<T: EntityType>(_ searchText: String, completion: @escaping (Result<[T], Error>) -> Void)
+    func fetchAll<T: Fetchable>(completion: @escaping (Result<[T], Error>) -> Void)
+    func save<T: Fetchable>(_ entities: [T], completion: ErrorBlock?)
+    func search<T: Fetchable>(_ searchText: String, completion: @escaping (Result<[T], Error>) -> Void)
     
 }
 
@@ -55,7 +55,7 @@ final class DefaultCoreDataService {
 //MARK: - CoreDataServiceProtocol
 extension DefaultCoreDataService: CoreDataService {
     
-    func all<T: EntityType>(completion: @escaping (Result<[T], Error>) -> Void) {
+    func fetchAll<T: Fetchable>(completion: @escaping (Result<[T], Error>) -> Void) {
         context.perform {
             do {
                 let fetchResult: [T] = try T.fetch(in: self.context, predicate: nil)
@@ -66,7 +66,7 @@ extension DefaultCoreDataService: CoreDataService {
         }
     }
     
-    func save<T: EntityType>(_ entities: [T], completion: ErrorBlock?) {
+    func save<T: Fetchable>(_ entities: [T], completion: ErrorBlock?) {
         context.perform {
             do {
                 for entity in entities {
@@ -83,7 +83,7 @@ extension DefaultCoreDataService: CoreDataService {
         }
     }
     
-    func search<T: EntityType>(_ searchText: String, completion: @escaping (Result<[T], Error>) -> Void) {
+    func search<T: Fetchable>(_ searchText: String, completion: @escaping (Result<[T], Error>) -> Void) {
         context.perform {
             do {
                 let predicate = SearchAttribute.title(searchText).predicate
