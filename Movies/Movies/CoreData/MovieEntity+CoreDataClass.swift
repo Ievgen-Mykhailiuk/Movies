@@ -7,36 +7,10 @@
 //
 
 import Foundation
-import CoreData
 
-protocol Fetchable: NSManagedObject {
+final class MovieEntity: BaseEntity  {
     
-    var identifier: Int { get }
-    static func fetch<T: NSManagedObject>(in context: NSManagedObjectContext,
-                                          predicate: NSPredicate?) throws -> [T]
-    
-}
-
-extension Fetchable {
-
-    static func fetch<T: NSManagedObject>(in context: NSManagedObjectContext,
-                                          predicate: NSPredicate?) throws -> [T] {
-        let fetchRequest = T.fetchRequest() as! NSFetchRequest<T>
-        fetchRequest.entity = T.entity()
-        fetchRequest.predicate = predicate
-        do {
-            let fetchResult = try context.fetch(fetchRequest)
-            return fetchResult
-        } catch {
-            throw error
-        }
-    }
-    
-}
-
-public final class MovieEntity: NSManagedObject, Fetchable {
-    
-    var identifier: Int {
+    override var identifier: Int {
         return self.id.intValue
     }
     

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FC5515EA28FEC39D00EE70F8 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = FC5515E928FEC39D00EE70F8 /* Reachability */; };
 		FC734400290AA6550088CDE6 /* SearchAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */; };
+		FC734402291013000088CDE6 /* BaseEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC734401291013000088CDE6 /* BaseEntity.swift */; };
 		FCD9FCEC28E1915B001968ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEB28E1915B001968ED /* AppDelegate.swift */; };
 		FCD9FCEE28E1915B001968ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCED28E1915B001968ED /* SceneDelegate.swift */; };
 		FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEF28E1915B001968ED /* MoviesViewController.swift */; };
@@ -66,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAttribute.swift; sourceTree = "<group>"; };
+		FC734401291013000088CDE6 /* BaseEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEntity.swift; sourceTree = "<group>"; };
 		FCD9FCE828E1915B001968ED /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD9FCEB28E1915B001968ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD9FCED28E1915B001968ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				FCD9FE0C28F84A6E001968ED /* SortType.swift */,
 				FCD9FE0E28F84D6C001968ED /* NetworkError.swift */,
 				FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */,
+				FC734401291013000088CDE6 /* BaseEntity.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				FCD9FD3628E19409001968ED /* BaseCollectionViewCell.swift in Sources */,
 				FCD9FD6828E4438A001968ED /* PosterViewController.swift in Sources */,
 				FCD9FD1F28E192DF001968ED /* UIViewController+Extension.swift in Sources */,
+				FC734402291013000088CDE6 /* BaseEntity.swift in Sources */,
 				FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */,
 				FCD9FDCF28F597F6001968ED /* ImageManager.swift in Sources */,
 				FCD9FDA828E6DE1C001968ED /* DataBase.xcdatamodeld in Sources */,
