@@ -12,6 +12,7 @@ protocol MoviesView: AnyObject {
     func showError(with message: String)
     func updateWithNetworkStatus(_ isAvailable: Bool)
     func scrollToTop()
+    func updateWithEmptySearchResults(for searchText: String)
 }
 
 final class MoviesViewController: UIViewController {
@@ -24,14 +25,16 @@ final class MoviesViewController: UIViewController {
         }
     }
     private let itemsLeftToNextPage: Int = 2
-    private let estimatedCellHeight: CGFloat = 200
+    private let estimatedCellHeight: CGFloat = 220
     private let padding: CGFloat = 15
+    private let spacing: CGFloat = 25
     private let titleFontSize: CGFloat = 26
     private let listTitle: String = "Popular Movies"
+    private let noResultsViewHeight: CGFloat = 400
     
     private lazy var layout: UICollectionViewCompositionalLayout = {
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                          heightDimension: .estimated(estimatedCellHeight))
+                                          heightDimension: .absolute(estimatedCellHeight))
         let item = NSCollectionLayoutItem(layoutSize: size)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: size,
                                                        subitem: item,
@@ -41,7 +44,7 @@ final class MoviesViewController: UIViewController {
                                                       bottom: .zero,
                                                       trailing: padding)
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = padding
+        section.interGroupSpacing = spacing
         return UICollectionViewCompositionalLayout(section: section)
     }()
     
@@ -60,23 +63,63 @@ final class MoviesViewController: UIViewController {
 
     private lazy var searchBarContoller: UISearchController = {
         let controller = UISearchController()
-        controller.searchBar.searchTextField.backgroundColor = Constants.appShadowColor
+        controller.searchBar.searchTextField.backgroundColor = UIColor(named: "searchBar")
         return controller
     }()
-
+    
+    private lazy var noResultsLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = .zero
+        label.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        label.heightAnchor.constraint(equalToConstant: noResultsViewHeight / 2).isActive = true
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var noResultsImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "noResults")
+        imageView.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: noResultsViewHeight / 2).isActive = true
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private lazy var noResultsView: UIStackView = {
+        let stackView = UIStackView(frame: CGRect(x: view.frame.minX,
+                                                  y: view.frame.midY - noResultsViewHeight / 2,
+                                                  width: view.frame.width,
+                                                  height: noResultsViewHeight))
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.addArrangedSubview(noResultsLabel)
+        stackView.addArrangedSubview(noResultsImageView)
+        return stackView
+    }()
+    
+    private lazy var backgroundView: UIView = {
+        let backgroundView = UIView()
+        backgroundView.frame = view.bounds
+        view.addSubview(backgroundView)
+        backgroundView.addGradient(with: Constants.backgroundColorSet,
+                                   startPoint: .bottomLeft,
+                                   endPoint: .topRight)
+        return backgroundView
+    }()
+        
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
         presenter.viewDidLoad()
     }
-    
+
     //MARK: - Actions
     @objc private func sortButtonAction() {
         let sortMenuController = UIAlertController(title: "Sort by",
                                                    message: nil,
                                                    preferredStyle: .actionSheet)
-        sortMenuController.view.tintColor = Constants.appShadowColor
+        sortMenuController.view.tintColor = Constants.appColor
         
         let popular = UIAlertAction(title: "popular",
                                     style: .default,
@@ -123,6 +166,7 @@ final class MoviesViewController: UIViewController {
     //MARK: - Private methods
     private func initialSetup() {
         CollectionViewCell.registerNib(in: collectionView)
+        LoaderCell.registerClass(in: collectionView)
         setupNavigationBar()
         setupCollectionView()
         setupSearchController()
@@ -130,10 +174,10 @@ final class MoviesViewController: UIViewController {
     
     private func setupNavigationBar() {
         title = listTitle
-        navigationController?.navigationBar.tintColor = Constants.appShadowColor
+        navigationController?.navigationBar.tintColor = Constants.appColor
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont(name: Constants.appFont, size: titleFontSize) as Any,
-            .foregroundColor: Constants.appShadowColor as Any
+            .foregroundColor: Constants.appColor as Any
         ]
         navigationItem.searchController = searchBarContoller
         navigationItem.setRightBarButton(sortButton, animated: false)
@@ -142,7 +186,7 @@ final class MoviesViewController: UIViewController {
     private func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.backgroundColor = Constants.appBackgroundColor
+        collectionView.backgroundView = backgroundView
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -154,12 +198,15 @@ final class MoviesViewController: UIViewController {
     }
     
     private func setupSearchController() {
+        searchBarContoller.view.addSubview(noResultsView)
+        noResultsView.isHidden = true
         searchBarContoller.searchBar.delegate = self
     }
 }
 
 //MARK: - MoviesViewProtocol
 extension MoviesViewController: MoviesView {
+
     func showError(with message: String) {
         showAlert(title: .defaultError, message: message)
     }
@@ -177,26 +224,45 @@ extension MoviesViewController: MoviesView {
                                     at: .centeredVertically,
                                     animated: true)
     }
+   
+    func updateWithEmptySearchResults(for searchText: String) {
+        noResultsLabel.attributedText = NSAttributedString(
+            string: "No results for '\(searchText)'",
+            attributes: [.font: UIFont(name: Constants.appFont, size: titleFontSize) as Any,
+                         .foregroundColor: Constants.appColor as Any]
+        )
+        noResultsView.isHidden = false
+    }
+    
 }
 
 //MARK: - UICollectionViewDataSource
 extension MoviesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter.getItemsCount()
+        return presenter.getItemsCount(isIncremented: true)
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: CollectionViewCell = .cell(in: self.collectionView, at: indexPath)
-        let movie = presenter.getItem(for: indexPath.item)
-        cell.configure(for: movie)
-        return cell
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if indexPath.item == presenter.getItemsCount(isIncremented: false) {
+            let cell: LoaderCell = .cell(in: self.collectionView, at: indexPath)
+            cell.configure()
+            return cell
+        } else {
+            let cell: CollectionViewCell = .cell(in: self.collectionView, at: indexPath)
+            let movie = presenter.getItem(for: indexPath.item)
+            cell.configure(for: movie)
+            return cell
+        }
     }
 }
 
 //MARK: - UICollectionViewDelegate
 extension MoviesViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.item == presenter.getItemsCount() - itemsLeftToNextPage {
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        if indexPath.item == presenter.getItemsCount(isIncremented: false) - itemsLeftToNextPage {
             presenter.getNextPage(sort: currentSortType)
         }
     }
@@ -210,10 +276,12 @@ extension MoviesViewController: UICollectionViewDelegate {
 extension MoviesViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         presenter.stopSearch()
+        noResultsView.isHidden = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter.search(text: searchText)
+        noResultsView.isHidden = true
     }
 }
 

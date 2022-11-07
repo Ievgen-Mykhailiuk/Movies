@@ -51,7 +51,7 @@ struct DetailsData: Codable {
     
     private enum CodingKeys: String, CodingKey {
         case genres, overview
-        case posterPath = "poster_path"
+        case posterPath = "backdrop_path"
         case countries = "production_countries"
         case releaseDate = "release_date"
         case title

@@ -17,30 +17,29 @@ final class ImageManager {
     func setImage(with urlString: String,
                   for imageView: UIImageView,
                   placeholder: UIImage?,
-                  completion: EmptyBlock? = nil) {
-       
+                  completion: ImageBlock? = nil) {
+        
         if let url = URL(string: urlString) {
-            KingfisherManager.shared.retrieveImage(with: url, options: nil) { result in
+            imageView.kf.indicatorType = .activity
+            imageView.kf.setImage(with: url) { result in
                 switch result {
                 case .success(let value):
-                    switch value.cacheType {
-                    case .disk, .memory:
-                        imageView.image = value.image
-                    case .none:
-                        imageView.image = value.image
-                        if let imageData = value.image.pngData() {
-                            ImageCache.default.storeToDisk(imageData, forKey: urlString)
-                        }
+                    if value.cacheType == .none, let imageData = value.image.jpegData(compressionQuality: 1) {
+                        ImageCache.default.storeToDisk(imageData, forKey: urlString)
                     }
+                    completion?(value.image)
                 case .failure(_):
-                    imageView.image = placeholder
+                    DispatchQueue.main.async {
+                        imageView.image = placeholder
+                    }
+                    completion?(nil)
                 }
-                completion?()
             }
         } else {
-            imageView.image = placeholder
-            completion?()
+            DispatchQueue.main.async {
+                imageView.image = placeholder
+            }
+            completion?(nil)
         }
     }
-    
 }

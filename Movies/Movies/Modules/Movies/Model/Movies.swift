@@ -84,7 +84,7 @@ struct MovieData: Codable {
     private enum CodingKeys: String, CodingKey {
         case genreIDS = "genre_ids"
         case id, overview, popularity
-        case posterPath = "poster_path"
+        case posterPath = "backdrop_path"
         case releaseDate = "release_date"
         case title
         case votesAverage = "vote_average"

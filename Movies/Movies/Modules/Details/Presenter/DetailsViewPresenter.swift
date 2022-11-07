@@ -5,12 +5,12 @@
 //  Created by Евгений  on 26/09/2022.
 //
 
-import Foundation
+import UIKit
 
 protocol DetailsPresenter {
     func viewDidLoad()
     func playTrailer()
-    func showPoster()
+    func showPoster(_ poster: UIImage)
 }
 
 final class DetailsViewPresenter {
@@ -70,13 +70,10 @@ extension DetailsViewPresenter: DetailsPresenter {
     
     func playTrailer() {
         guard let trailerID = movie?.trailerID else { return }
-        router.showTrailer(trailerID: trailerID)
+        router.showTrailer(trailerID)
     }
     
-    func showPoster() {
-        guard let movie = movie else { return }
-        if !movie.posterPath.isEmpty {
-            router.showFullSizePoster(with: movie.posterPath)
-        }
+    func showPoster(_ poster: UIImage) {
+        router.showZoomablePoster(poster)
     }
 }

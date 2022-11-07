@@ -8,6 +8,6 @@
 import Foundation
 
 enum PosterSize: String {
-    case small = "w300"
+    case small = "w500"
     case full = "original"
 }

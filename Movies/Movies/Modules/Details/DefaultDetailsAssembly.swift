@@ -8,19 +8,18 @@
 import UIKit
 
 protocol DetailsAssembly {
-    func createDetailsModule(for movie: MovieModel) -> UIViewController
+    func createDetailsModule(for movieID: Int) -> UIViewController
 }
 
 final class DefaultDetailsAssembly: DetailsAssembly {
-    func createDetailsModule(for movie: MovieModel) -> UIViewController {
+    func createDetailsModule(for movieID: Int) -> UIViewController {
         let view  = DetailsViewController.instantiateFromStoryboard()
         let router = DefaultDetailsRouter(viewController: view)
         let dataManager = DefaultDetailsRepository()
         let presenter = DetailsViewPresenter(view: view,
                                              dataManager: dataManager,
                                              router: router,
-                                             movieID: movie.id)
-        view.title = movie.title
+                                             movieID: movieID)
         view.presenter = presenter
         return view
     }

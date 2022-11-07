@@ -11,8 +11,8 @@ extension UIImageView {
     
     func setImage(urlString: String,
                   placeholder: UIImage? = nil,
-                  completion: EmptyBlock? = nil) {
-        
+                  completion: ImageBlock? = nil) {
+       
         ImageManager.shared.setImage(with: urlString,
                                      for: self,
                                      placeholder: placeholder,

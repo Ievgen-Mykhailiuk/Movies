@@ -5,16 +5,16 @@
 //  Created by Евгений  on 26/09/2022.
 //
 
-import Foundation
+import UIKit
 import YouTubePlayerKit
 
 protocol DetailsRouter {
-    func showTrailer(trailerID: String)
-    func showFullSizePoster(with path: String)
+    func showTrailer(_ trailerID: String)
+    func showZoomablePoster(_ poster: UIImage)
 }
 
 final class DefaultDetailsRouter: BaseRouter, DetailsRouter {
-    func showTrailer(trailerID: String) {
+    func showTrailer(_ trailerID: String) {
         let viewController = YouTubePlayerViewController(source: .video(id: trailerID),
                                                          configuration: .init())
         show(viewController: viewController,
@@ -23,8 +23,8 @@ final class DefaultDetailsRouter: BaseRouter, DetailsRouter {
              completion: nil)
     }
     
-    func showFullSizePoster(with path: String) {
-        let viewController = DefaultPosterAssembly().createPosterModule(with: path)
+    func showZoomablePoster(_ poster: UIImage) {
+        let viewController = DefaultPosterAssembly().createPosterModule(with: poster)
         show(viewController: viewController,
              isModal: true,
              animated: true,

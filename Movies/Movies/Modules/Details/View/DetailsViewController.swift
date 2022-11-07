@@ -17,18 +17,18 @@ final class DetailsViewController: UIViewController {
     //MARK: - Outlets
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var movieNameLabel: UILabel!
-    @IBOutlet private weak var countryLabel: UILabel!
     @IBOutlet private weak var releaseYearLabel: UILabel!
+    @IBOutlet private weak var countryLabel: UILabel!
     @IBOutlet private weak var genresLabel: UILabel!
-    @IBOutlet private weak var trailerButton: UIButton!
+    @IBOutlet private weak var playTrailerImageView: UIImageView!
     @IBOutlet private weak var rankLabel: UILabel!
     @IBOutlet private weak var votesCountLabel: UILabel!
     @IBOutlet private weak var overviewLabel: UILabel!
     
     //MARK: - Properties
     var presenter: DetailsPresenter!
-    private let radius: CGFloat = 10
-
+    private var poster: UIImage?
+    
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,52 +37,58 @@ final class DetailsViewController: UIViewController {
     }
     
     //MARK: - Actions
-    @IBAction private func trailerButtonTapped(_ sender: Any) {
+    @objc private func trailerButtonTapped(_: UITapGestureRecognizer) {
         presenter.playTrailer()
     }
     
-    @objc private func imageTapped(_: UITapGestureRecognizer) {
-        presenter.showPoster()
+    @objc private func posterTapped(_: UITapGestureRecognizer) {
+        guard let poster = poster else { return }
+        presenter.showPoster(poster)
     }
     
     //MARK: - Private Methods
     private func initialSetup() {
-        showLoadingView(indicatorColor: Constants.appShadowColor,
-                        backgroundColor: Constants.appBackgroundColor)
-        setupTrailerButton()
-        setRecognizer()
-    }
-
-    private func setupTrailerButton() {
-        trailerButton.makeRounded()
-        trailerButton.backgroundColor = Constants.appShadowColor
-        trailerButton.isHidden = true
+        showLoadingView(indicatorColor: .lightGray, backgroundColor: Constants.appColor)
+        view.addGradient(with: Constants.backgroundColorSet, startPoint: .bottomLeft, endPoint: .topRight)
+        setRecognizers()
+        playTrailerImageView.isHidden = true
     }
     
-    private func setRecognizer() {
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
-        posterImageView.isUserInteractionEnabled = true
-        posterImageView.addGestureRecognizer(recognizer)
+    private func setRecognizers() {
+        let playTrailerRecognizer = UITapGestureRecognizer(target: self,
+                                                           action: #selector(trailerButtonTapped(_:)))
+        let showPosterRecognizer = UITapGestureRecognizer(target: self,
+                                                          action: #selector(posterTapped(_:)))
+        playTrailerImageView.addGestureRecognizer(playTrailerRecognizer)
+        posterImageView.addGestureRecognizer(showPosterRecognizer)
     }
     
-    private func setPoster(for movie: DetailsModel) {
-        let urlString = EndPoint.poster(size: .small, path: movie.posterPath).urlString
-        let placeholder = Constants.placeholder
-        posterImageView.setImage(urlString: urlString, placeholder: placeholder)
-        posterImageView.cornerRadius = radius
+    private func applyVisualEffects() {
+        posterImageView.isHidden ? nil : posterImageView.addShadow()
+        playTrailerImageView.isHidden ? nil : playTrailerImageView.addShadow()
     }
-
-    private func configure(movie: DetailsModel?) {
+    
+    private func setPoster(for movie: DetailsModel, completion: @escaping EmptyBlock) {
+        let urlString = EndPoint.poster(size: .full, path: movie.posterPath).urlString
+        posterImageView.setImage(urlString: urlString) { image in
+            self.poster = image
+            self.posterImageView.isHidden = image == nil
+            completion()
+        }
+    }
+    
+    private func configure(movie: DetailsModel?, completion: @escaping EmptyBlock) {
         guard let movie = movie else { return }
-        setPoster(for: movie)
-        countryLabel.text = movie.countries.joined(separator: .comaSeparator)
-        movieNameLabel.text = movie.title
-        genresLabel.text = movie.genres.joined(separator: .comaSeparator)
+        setPoster(for: movie, completion: completion)
+        countryLabel.text =  movie.countries.joined(separator: .commaSeparator)
         releaseYearLabel.text = movie.releaseYear
+        movieNameLabel.text = movie.title
+        genresLabel.text = movie.genres.joined(separator: .commaSeparator)
         rankLabel.text = movie.voteAverage.stringDecimalValue
         votesCountLabel.text = movie.voteCount.stringValue
         overviewLabel.text = movie.overview
-        trailerButton.isHidden = movie.trailerID == nil
+        playTrailerImageView.isHidden = movie.trailerID == nil
+        applyVisualEffects()
     }
 }
 
@@ -93,7 +99,8 @@ extension DetailsViewController: DetailsView {
     }
     
     func showDetails(movie: DetailsModel?) {
-        configure(movie: movie)
-        hideLoadingView()
+        configure(movie: movie) {
+            self.hideLoadingView()
+        }
     }
 }

@@ -11,7 +11,7 @@ protocol MoviesPresenter {
     func viewDidLoad()
     func getSortedList(_ type: SortType)
     func getItem(for index: Int) -> MovieModel
-    func getItemsCount() -> Int
+    func getItemsCount(isIncremented: Bool) -> Int
     func getNextPage(sort type: SortType)
     func search(text: String)
     func stopSearch()
@@ -97,24 +97,27 @@ final class MoviesViewPresenter {
                 guard let currentPage = self.list.last?.page,
                       let totalPages = self.list.last?.totalPages,
                       currentPage < totalPages else { return }
-                page = currentPage
+                page = currentPage 
                 page.increment()
             }
             self.isLoading = true
             self.dataManager.search(self.searchText, page: page, genres: self.genres) { [weak self] result in
-                self?.isLoading = false
+                guard let self = self else { return }
+                self.isLoading = false
                 switch result {
                 case .success(let movies):
-                    self?.searchResults.append(contentsOf: movies)
+                    movies.isEmpty ?
+                    self.view.updateWithEmptySearchResults(for: self.searchText) :
+                    self.searchResults.append(contentsOf: movies)
                 case .failure(let error):
-                    self?.view.showError(with: error.localizedDescription)
+                    self.view.showError(with: error.localizedDescription)
                 }
             }
         }
         searchWorkItem = newSearchWorkItem
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: newSearchWorkItem)
     }
-     
+    
     private func getMovies(sortType: SortType, hasNextPage: Bool, completion: EmptyBlock? = nil) {
         guard !isLoading else { return }
         var page = 1
@@ -182,8 +185,20 @@ extension MoviesViewPresenter: MoviesPresenter {
         searchResults.isEmpty ? movies[index] : searchResults[index]
     }
     
-    func getItemsCount() -> Int {
-        list.count
+    func getItemsCount(isIncremented: Bool) -> Int {
+        if !isIncremented {
+            return list.count
+        } else {
+            if list.isEmpty {
+                return .zero
+            } else if let currentPage = list.last?.page,
+                      let totalPages = list.last?.totalPages,
+                      currentPage < totalPages {
+                return list.count + 1
+            } else {
+                return list.count
+            }
+        }
     }
     
     func getNextPage(sort type: SortType) {
@@ -213,7 +228,7 @@ extension MoviesViewPresenter: MoviesPresenter {
     func didSelectItem(at index: Int) {
         let movie = getItem(for: index)
         ReachabilityManager.shared.isNetworkAvailable ?
-        router.showDetails(for: movie) :
+        router.showDetails(for: movie.id) :
         view.showError(with: NetworkError.offline.errorDescription)
     }
 }

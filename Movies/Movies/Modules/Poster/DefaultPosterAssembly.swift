@@ -8,14 +8,14 @@
 import UIKit
 
 protocol PosterAssembly {
-    func createPosterModule(with path: String) -> UIViewController
+    func createPosterModule(with poster: UIImage) -> UIViewController
 }
 
 final class DefaultPosterAssembly: PosterAssembly {    
-    func createPosterModule(with path: String) -> UIViewController {
-        let view = PosterViewController()
+    func createPosterModule(with poster: UIImage) -> UIViewController {
+        let view = PosterViewController(poster: poster)
         let router = DefaultPosterRouter(viewController: view) 
-        let presenter = PosterViewPresenter(view: view, router: router, path: path)
+        let presenter = PosterViewPresenter(view: view, router: router)
         view.presenter = presenter
         view.modalPresentationStyle = .fullScreen
         return view

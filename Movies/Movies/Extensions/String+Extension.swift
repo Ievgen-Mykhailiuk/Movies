@@ -9,6 +9,6 @@ import Foundation
 
 extension String {
     static let empty = ""
-    static let comaSeparator = ", "
+    static let commaSeparator = ", "
     static let defaultError = "Error"
 }

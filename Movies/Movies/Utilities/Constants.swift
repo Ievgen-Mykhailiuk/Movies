@@ -17,8 +17,16 @@ typealias DetailsBlock = (Result<DetailsModel, Error>) -> Void
 typealias TrailerBlock = (Result<String?, Error>) -> Void
 
 struct Constants {
-    static let appBackgroundColor = UIColor(named: "backgroundColor")
-    static let appShadowColor = UIColor(named: "shadowColor")
+
+    static let appColor = UIColor(named: "appColor")
     static let placeholder = UIImage(named: "placeholder")
     static let appFont: String = "Futura"
+    static let backgroundColorSet: [UIColor] = [
+        UIColor(named: "set1")!,
+        UIColor(named: "set2")!,
+        UIColor(named: "set3")!,
+        UIColor(named: "set4")!,
+        UIColor(named: "set5")!
+    ]
+
 }
