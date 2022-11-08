@@ -30,7 +30,7 @@ final class MoviesViewController: UIViewController {
     private let spacing: CGFloat = 25
     private let titleFontSize: CGFloat = 26
     private let listTitle: String = "Popular Movies"
-    private let noResultsViewHeight: CGFloat = 400
+    private let noResultsViewHeight: CGFloat = 300
     
     private lazy var layout: UICollectionViewCompositionalLayout = {
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
@@ -87,7 +87,7 @@ final class MoviesViewController: UIViewController {
     
     private lazy var noResultsView: UIStackView = {
         let stackView = UIStackView(frame: CGRect(x: view.frame.minX,
-                                                  y: view.frame.midY - noResultsViewHeight / 2,
+                                                  y: view.frame.midY - noResultsViewHeight,
                                                   width: view.frame.width,
                                                   height: noResultsViewHeight))
         stackView.axis = .vertical
@@ -239,12 +239,12 @@ extension MoviesViewController: MoviesView {
 //MARK: - UICollectionViewDataSource
 extension MoviesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter.getItemsCount(isIncremented: true)
+        return presenter.getItemsCount(hasLoader: true)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == presenter.getItemsCount(isIncremented: false) {
+        if indexPath.item == presenter.getItemsCount(hasLoader: false) {
             let cell: LoaderCell = .cell(in: self.collectionView, at: indexPath)
             cell.configure()
             return cell
@@ -262,7 +262,7 @@ extension MoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if indexPath.item == presenter.getItemsCount(isIncremented: false) - itemsLeftToNextPage {
+        if indexPath.item == presenter.getItemsCount(hasLoader: false) - itemsLeftToNextPage {
             presenter.getNextPage(sort: currentSortType)
         }
     }

@@ -11,7 +11,7 @@ protocol MoviesPresenter {
     func viewDidLoad()
     func getSortedList(_ type: SortType)
     func getItem(for index: Int) -> MovieModel
-    func getItemsCount(isIncremented: Bool) -> Int
+    func getItemsCount(hasLoader: Bool) -> Int
     func getNextPage(sort type: SortType)
     func search(text: String)
     func stopSearch()
@@ -185,8 +185,8 @@ extension MoviesViewPresenter: MoviesPresenter {
         searchResults.isEmpty ? movies[index] : searchResults[index]
     }
     
-    func getItemsCount(isIncremented: Bool) -> Int {
-        if !isIncremented {
+    func getItemsCount(hasLoader: Bool) -> Int {
+        if !hasLoader {
             return list.count
         } else {
             if list.isEmpty {

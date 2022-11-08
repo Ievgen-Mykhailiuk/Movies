@@ -24,10 +24,10 @@ final class ImageManager {
             imageView.kf.setImage(with: url) { result in
                 switch result {
                 case .success(let value):
-                    if value.cacheType == .none, let imageData = value.image.jpegData(compressionQuality: 1) {
+                    completion?(value.image)
+                    if value.cacheType == .none, let imageData = value.image.jpegData(compressionQuality: 0.1) {
                         ImageCache.default.storeToDisk(imageData, forKey: urlString)
                     }
-                    completion?(value.image)
                 case .failure(_):
                     DispatchQueue.main.async {
                         imageView.image = placeholder

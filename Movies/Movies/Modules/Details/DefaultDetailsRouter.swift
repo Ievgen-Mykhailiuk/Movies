@@ -15,8 +15,7 @@ protocol DetailsRouter {
 
 final class DefaultDetailsRouter: BaseRouter, DetailsRouter {
     func showTrailer(_ trailerID: String) {
-        let viewController = YouTubePlayerViewController(source: .video(id: trailerID),
-                                                         configuration: .init())
+        let viewController = YouTubePlayerViewController(source: .video(id: trailerID))
         show(viewController: viewController,
              isModal: false,
              animated: false,
