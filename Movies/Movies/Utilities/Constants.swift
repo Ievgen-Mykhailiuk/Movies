@@ -21,12 +21,5 @@ struct Constants {
     static let appColor = UIColor(named: "appColor")
     static let placeholder = UIImage(named: "placeholder")
     static let appFont: String = "Futura"
-    static let backgroundColorSet: [UIColor] = [
-        UIColor(named: "set1")!,
-        UIColor(named: "set2")!,
-        UIColor(named: "set3")!,
-        UIColor(named: "set4")!,
-        UIColor(named: "set5")!
-    ]
-
+   
 }

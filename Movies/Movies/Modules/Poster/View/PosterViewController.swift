@@ -16,9 +16,7 @@ final class PosterViewController: UIViewController {
     //MARK: - Properties
     var presenter: PosterPresenter!
     private let poster: UIImage
-    private let buttonDiameter: CGFloat = 50
-    private let buttonFontSize: CGFloat = 16
-    private let buttonTitle: String = "Back"
+    private let buttonDiameter: CGFloat = 40
     
     private lazy var scrollView: PosterScrollView = {
         let scrollView = PosterScrollView(image: poster)
@@ -26,21 +24,18 @@ final class PosterViewController: UIViewController {
         return scrollView
     }()
     
-    private lazy var backButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: view.frame.midX - buttonDiameter / 2,
-                                            y: view.frame.maxY - buttonDiameter * 2,
+    private lazy var closeButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: view.frame.width - buttonDiameter * 1.5,
+                                            y: buttonDiameter * 1.5,
                                             width: buttonDiameter,
                                             height: buttonDiameter))
-        let attributetText = NSAttributedString(
-            string: buttonTitle,
-            attributes: [.font: UIFont(name: Constants.appFont, size: buttonFontSize) as Any,
-                         .foregroundColor: UIColor.lightGray as Any]
-        )
-        button.setAttributedTitle(attributetText, for: .normal)
-        button.backgroundColor = .black.withAlphaComponent(0.7)
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .white.withAlphaComponent(0.2)
+        button.makeRounded()
         return button
     }()
-    
+
     //MARK: - Life Cycle
     init(poster: UIImage) {
         self.poster = poster
@@ -61,21 +56,29 @@ final class PosterViewController: UIViewController {
         presenter.close()
     }
     
+    @objc private func handleSwipe(_ sender:UISwipeGestureRecognizer) {
+        presenter.close()
+    }
+    
     //MARK: - Private methods
     private func setup() {
         view.backgroundColor = .black
         view.addSubview(scrollView)
         setupBackButton()
+        setupSwipeRecognizer()
     }
     
     private func setupBackButton() {
         let tap = UITapGestureRecognizer(target: self, action:  #selector(close(_:)))
-        backButton.addGestureRecognizer(tap)
-        backButton.makeRounded()
-        backButton.addShadow(color: UIColor.white.cgColor)
-        view.addSubview(backButton)
+        closeButton.addGestureRecognizer(tap)
+        view.addSubview(closeButton)
     }
-
+    
+    private func setupSwipeRecognizer() {
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipe.direction = .down
+        view.addGestureRecognizer(swipe)
+    }
 }
 
 //MARK: - PosterViewProtocol

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import YouTubePlayerKit
 
 protocol DetailsRouter {
     func showTrailer(_ trailerID: String)
@@ -15,18 +14,12 @@ protocol DetailsRouter {
 
 final class DefaultDetailsRouter: BaseRouter, DetailsRouter {
     func showTrailer(_ trailerID: String) {
-        let viewController = YouTubePlayerViewController(source: .video(id: trailerID))
-        show(viewController: viewController,
-             isModal: false,
-             animated: false,
-             completion: nil)
+        let viewController = DefaultPlayerAssembler().createPlayerModule(with: trailerID)
+        show(viewController: viewController, isModal: true, animated: true)
     }
     
     func showZoomablePoster(_ poster: UIImage) {
         let viewController = DefaultPosterAssembly().createPosterModule(with: poster)
-        show(viewController: viewController,
-             isModal: true,
-             animated: true,
-             completion: nil)
+        show(viewController: viewController, isModal: true, animated: true)
     }
 }

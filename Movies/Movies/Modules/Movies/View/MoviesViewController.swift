@@ -26,12 +26,13 @@ final class MoviesViewController: UIViewController {
     }
     private let itemsLeftToNextPage: Int = 2
     private let estimatedCellHeight: CGFloat = 220
-    private let padding: CGFloat = 15
+    private let edgeInset: CGFloat = 15
     private let spacing: CGFloat = 25
     private let titleFontSize: CGFloat = 26
     private let listTitle: String = "Popular Movies"
-    private let noResultsViewHeight: CGFloat = 300
-    
+    private let noSearchResultsViewHeight: CGFloat = 200
+    private let searchInProgressLabelHeight: CGFloat = 50
+
     private lazy var layout: UICollectionViewCompositionalLayout = {
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                           heightDimension: .absolute(estimatedCellHeight))
@@ -40,9 +41,9 @@ final class MoviesViewController: UIViewController {
                                                        subitem: item,
                                                        count: 1)
         group.contentInsets = NSDirectionalEdgeInsets(top: .zero,
-                                                      leading: padding,
+                                                      leading: edgeInset,
                                                       bottom: .zero,
-                                                      trailing: padding)
+                                                      trailing: edgeInset)
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
         return UICollectionViewCompositionalLayout(section: section)
@@ -67,33 +68,34 @@ final class MoviesViewController: UIViewController {
         return controller
     }()
     
-    private lazy var noResultsLabel: UILabel = {
+    private lazy var noSearchResultsLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = .zero
         label.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-        label.heightAnchor.constraint(equalToConstant: noResultsViewHeight / 2).isActive = true
+        label.heightAnchor.constraint(equalToConstant: noSearchResultsViewHeight / 2).isActive = true
         label.textAlignment = .center
         return label
     }()
     
-    private lazy var noResultsImageView: UIImageView = {
+    private lazy var noSearchResultsImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "noResults")
         imageView.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: noResultsViewHeight / 2).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: noSearchResultsViewHeight / 2).isActive = true
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    private lazy var noResultsView: UIStackView = {
-        let stackView = UIStackView(frame: CGRect(x: view.frame.minX,
-                                                  y: view.frame.midY - noResultsViewHeight,
+    private lazy var noSearchResultsView: UIStackView = {
+        let stackView = UIStackView(frame: CGRect(x: .zero,
+                                                  y: view.frame.height / 4,
                                                   width: view.frame.width,
-                                                  height: noResultsViewHeight))
+                                                  height: noSearchResultsViewHeight))
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.addArrangedSubview(noResultsLabel)
-        stackView.addArrangedSubview(noResultsImageView)
+        stackView.addArrangedSubview(noSearchResultsLabel)
+        stackView.addArrangedSubview(noSearchResultsImageView)
+        stackView.isHidden = true
         return stackView
     }()
     
@@ -101,12 +103,25 @@ final class MoviesViewController: UIViewController {
         let backgroundView = UIView()
         backgroundView.frame = view.bounds
         view.addSubview(backgroundView)
-        backgroundView.addGradient(with: Constants.backgroundColorSet,
-                                   startPoint: .bottomLeft,
-                                   endPoint: .topRight)
+        backgroundView.addGradient(with: [.white, .darkGray], startPoint: .bottomLeft, endPoint: .topRight)
         return backgroundView
     }()
-        
+    
+    private lazy var searchInProgressLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: .zero,
+                                          y: view.frame.height / 4,
+                                          width: view.frame.width,
+                                          height: searchInProgressLabelHeight))
+        label.attributedText = NSAttributedString(
+            string: "Searching...",
+            attributes: [.font: UIFont(name: Constants.appFont, size: titleFontSize) as Any,
+                         .foregroundColor: Constants.appColor as Any]
+        )
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,21 +139,25 @@ final class MoviesViewController: UIViewController {
         let popular = UIAlertAction(title: "popular",
                                     style: .default,
                                     handler: { SortBlock in
+            guard self.currentSortType != .popular else { return }
             self.currentSortType = .popular
         })
         let nowPlaying = UIAlertAction(title: "now playing",
                                        style: .default,
                                        handler: { SortBlock in
+            guard self.currentSortType != .nowPlaying else { return }
             self.currentSortType = .nowPlaying
         })
         let topRated = UIAlertAction(title: "top rated",
                                      style: .default,
                                      handler: { SortBlock in
+            guard self.currentSortType != .topRated else { return }
             self.currentSortType = .topRated
         })
         let upcoming = UIAlertAction(title: "upcoming",
                                      style: .default,
                                      handler: { SortBlock in
+            guard self.currentSortType != .upcoming else { return }
             self.currentSortType = .upcoming
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -198,8 +217,8 @@ final class MoviesViewController: UIViewController {
     }
     
     private func setupSearchController() {
-        searchBarContoller.view.addSubview(noResultsView)
-        noResultsView.isHidden = true
+        searchBarContoller.view.addSubview(searchInProgressLabel)
+        searchBarContoller.view.addSubview(noSearchResultsView)
         searchBarContoller.searchBar.delegate = self
     }
 }
@@ -212,7 +231,7 @@ extension MoviesViewController: MoviesView {
     }
     
     func update() {
-        collectionView.reloadData()
+        collectionView.reloadSections(IndexSet(integer: .zero))
     }
     
     func updateWithNetworkStatus(_ isAvailable: Bool) {
@@ -226,12 +245,13 @@ extension MoviesViewController: MoviesView {
     }
    
     func updateWithEmptySearchResults(for searchText: String) {
-        noResultsLabel.attributedText = NSAttributedString(
+        noSearchResultsLabel.attributedText = NSAttributedString(
             string: "No results for '\(searchText)'",
             attributes: [.font: UIFont(name: Constants.appFont, size: titleFontSize) as Any,
                          .foregroundColor: Constants.appColor as Any]
         )
-        noResultsView.isHidden = false
+        noSearchResultsView.isHidden = false
+        searchInProgressLabel.isHidden = true
     }
     
 }
@@ -276,12 +296,15 @@ extension MoviesViewController: UICollectionViewDelegate {
 extension MoviesViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         presenter.stopSearch()
-        noResultsView.isHidden = true
+        noSearchResultsView.isHidden = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.search(text: searchText)
-        noResultsView.isHidden = true
+        searchInProgressLabel.isHidden = searchText.isEmpty
+        presenter.search(text: searchText) {
+            self.searchInProgressLabel.isHidden = true
+        }
+        noSearchResultsView.isHidden = true
     }
 }
 

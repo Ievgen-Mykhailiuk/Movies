@@ -13,6 +13,6 @@ protocol PosterRouter {
 
 final class DefaultPosterRouter: BaseRouter, PosterRouter {
     func close() {
-         close(animated: true, completion: nil)
+         close(animated: true)
     }
 }

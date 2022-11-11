@@ -13,6 +13,12 @@
 		FC734400290AA6550088CDE6 /* SearchAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */; };
 		FC734402291013000088CDE6 /* BaseEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC734401291013000088CDE6 /* BaseEntity.swift */; };
 		FC9DEAFF2918264A00F01EA5 /* PosterScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9DEAFE2918264900F01EA5 /* PosterScrollView.swift */; };
+		FC9DEB02291BE8E700F01EA5 /* netfox in Frameworks */ = {isa = PBXBuildFile; productRef = FC9DEB01291BE8E700F01EA5 /* netfox */; };
+		FCD0E7CF291D1917001DDB85 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD0E7CE291D1917001DDB85 /* PlayerViewController.swift */; };
+		FCD0E7D1291D1925001DDB85 /* PlayerViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD0E7D0291D1925001DDB85 /* PlayerViewPresenter.swift */; };
+		FCD0E7D3291D1962001DDB85 /* DefaultPlayerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD0E7D2291D1962001DDB85 /* DefaultPlayerRouter.swift */; };
+		FCD0E7D5291D198C001DDB85 /* DefaultPlayerAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD0E7D4291D198C001DDB85 /* DefaultPlayerAssembler.swift */; };
+		FCD0E7D8291D1A08001DDB85 /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = FCD0E7D7291D1A08001DDB85 /* YouTubeiOSPlayerHelper */; };
 		FCD9FCEC28E1915B001968ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEB28E1915B001968ED /* AppDelegate.swift */; };
 		FCD9FCEE28E1915B001968ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCED28E1915B001968ED /* SceneDelegate.swift */; };
 		FCD9FCF028E1915B001968ED /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FCEF28E1915B001968ED /* MoviesViewController.swift */; };
@@ -58,7 +64,6 @@
 		FCD9FDCD28F467E9001968ED /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FDCC28F467E9001968ED /* Date+Extension.swift */; };
 		FCD9FDCF28F597F6001968ED /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FDCE28F597F6001968ED /* ImageManager.swift */; };
 		FCD9FDEB28F5A7C5001968ED /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FDEA28F5A7C5001968ED /* Alamofire */; };
-		FCD9FDEE28F5A7E7001968ED /* YouTubePlayerKit in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FDED28F5A7E7001968ED /* YouTubePlayerKit */; };
 		FCD9FDF128F5A807001968ED /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FCD9FDF028F5A807001968ED /* Kingfisher */; };
 		FCD9FE0628F5ABB5001968ED /* MovieEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FE0228F5ABB5001968ED /* MovieEntity+CoreDataClass.swift */; };
 		FCD9FE0728F5ABB5001968ED /* MovieEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD9FE0328F5ABB5001968ED /* MovieEntity+CoreDataProperties.swift */; };
@@ -74,6 +79,10 @@
 		FC7343FF290AA6550088CDE6 /* SearchAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAttribute.swift; sourceTree = "<group>"; };
 		FC734401291013000088CDE6 /* BaseEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEntity.swift; sourceTree = "<group>"; };
 		FC9DEAFE2918264900F01EA5 /* PosterScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PosterScrollView.swift; path = ../../../../../../../Downloads/PosterScrollView.swift; sourceTree = "<group>"; };
+		FCD0E7CE291D1917001DDB85 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		FCD0E7D0291D1925001DDB85 /* PlayerViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewPresenter.swift; sourceTree = "<group>"; };
+		FCD0E7D2291D1962001DDB85 /* DefaultPlayerRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPlayerRouter.swift; sourceTree = "<group>"; };
+		FCD0E7D4291D198C001DDB85 /* DefaultPlayerAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPlayerAssembler.swift; sourceTree = "<group>"; };
 		FCD9FCE828E1915B001968ED /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD9FCEB28E1915B001968ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD9FCED28E1915B001968ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -133,10 +142,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC9DEB02291BE8E700F01EA5 /* netfox in Frameworks */,
 				FCD9FDF128F5A807001968ED /* Kingfisher in Frameworks */,
 				FC5515EA28FEC39D00EE70F8 /* Reachability in Frameworks */,
-				FCD9FDEE28F5A7E7001968ED /* YouTubePlayerKit in Frameworks */,
 				FCD9FDEB28F5A7C5001968ED /* Alamofire in Frameworks */,
+				FCD0E7D8291D1A08001DDB85 /* YouTubeiOSPlayerHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +176,17 @@
 				FCD9FD3728E1941B001968ED /* EndPoint.swift */,
 			);
 			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		FCD0E7CD291D1907001DDB85 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				FCD0E7CE291D1917001DDB85 /* PlayerViewController.swift */,
+				FCD0E7D0291D1925001DDB85 /* PlayerViewPresenter.swift */,
+				FCD0E7D2291D1962001DDB85 /* DefaultPlayerRouter.swift */,
+				FCD0E7D4291D198C001DDB85 /* DefaultPlayerAssembler.swift */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 		FCD9FCDF28E1915B001968ED = {
@@ -203,6 +224,7 @@
 		FCD9FCFF28E191BB001968ED /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				FCD0E7CD291D1907001DDB85 /* Player */,
 				FCD9FD6928E44951001968ED /* Poster */,
 				FCD9FD4E28E19689001968ED /* Details */,
 				FCD9FD1528E1924B001968ED /* Movies */,
@@ -400,9 +422,10 @@
 			name = Movies;
 			packageProductDependencies = (
 				FCD9FDEA28F5A7C5001968ED /* Alamofire */,
-				FCD9FDED28F5A7E7001968ED /* YouTubePlayerKit */,
 				FCD9FDF028F5A807001968ED /* Kingfisher */,
 				FC5515E928FEC39D00EE70F8 /* Reachability */,
+				FC9DEB01291BE8E700F01EA5 /* netfox */,
+				FCD0E7D7291D1A08001DDB85 /* YouTubeiOSPlayerHelper */,
 			);
 			productName = Movies;
 			productReference = FCD9FCE828E1915B001968ED /* Movies.app */;
@@ -434,9 +457,10 @@
 			mainGroup = FCD9FCDF28E1915B001968ED;
 			packageReferences = (
 				FCD9FDE928F5A7C5001968ED /* XCRemoteSwiftPackageReference "Alamofire" */,
-				FCD9FDEC28F5A7E7001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 				FCD9FDEF28F5A807001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				FC5515E828FEC39D00EE70F8 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
+				FC9DEB00291BE8E700F01EA5 /* XCRemoteSwiftPackageReference "netfox" */,
+				FCD0E7D6291D1A08001DDB85 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
 			);
 			productRefGroup = FCD9FCE928E1915B001968ED /* Products */;
 			projectDirPath = "";
@@ -466,6 +490,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCD0E7CF291D1917001DDB85 /* PlayerViewController.swift in Sources */,
 				FC9DEAFF2918264A00F01EA5 /* PosterScrollView.swift in Sources */,
 				FCD9FE0628F5ABB5001968ED /* MovieEntity+CoreDataClass.swift in Sources */,
 				FCD9FD7728E6D979001968ED /* DefaultCoreDataService.swift in Sources */,
@@ -498,6 +523,7 @@
 				FC6F17E429167ACA006BB809 /* GradientPoint.swift in Sources */,
 				FCD9FDC728F205E4001968ED /* Int+Extension.swift in Sources */,
 				FCD9FE0D28F84A6E001968ED /* SortType.swift in Sources */,
+				FCD0E7D5291D198C001DDB85 /* DefaultPlayerAssembler.swift in Sources */,
 				FCD9FD3A28E19434001968ED /* DefaultMoviesAssembly.swift in Sources */,
 				FCD9FD5728E1A1CF001968ED /* DefaultDetailsAssembly.swift in Sources */,
 				FCD9FD5328E196C7001968ED /* DetailsViewPresenter.swift in Sources */,
@@ -508,6 +534,7 @@
 				FCD9FE0B28F84A34001968ED /* PosterSize.swift in Sources */,
 				FCD9FD2928E1936B001968ED /* CollectionCellDequeueable.swift in Sources */,
 				FCD9FD7128E44A4E001968ED /* DefaultPosterRouter.swift in Sources */,
+				FCD0E7D3291D1962001DDB85 /* DefaultPlayerRouter.swift in Sources */,
 				FCD9FD4028E1947E001968ED /* Movies.swift in Sources */,
 				FCD9FCEC28E1915B001968ED /* AppDelegate.swift in Sources */,
 				FC6F17E229167033006BB809 /* LoaderCell.swift in Sources */,
@@ -515,6 +542,7 @@
 				FCD9FCEE28E1915B001968ED /* SceneDelegate.swift in Sources */,
 				FCD9FD2328E19315001968ED /* UINavigationController+Extension.swift in Sources */,
 				FCD9FD6D28E44987001968ED /* PosterViewPresenter.swift in Sources */,
+				FCD0E7D1291D1925001DDB85 /* PlayerViewPresenter.swift in Sources */,
 				FCD9FD3028E193C3001968ED /* Constants.swift in Sources */,
 				FCD9FE1128F9A0BE001968ED /* ReachabilityManager.swift in Sources */,
 			);
@@ -758,20 +786,28 @@
 				kind = branch;
 			};
 		};
+		FC9DEB00291BE8E700F01EA5 /* XCRemoteSwiftPackageReference "netfox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kasketis/netfox.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		FCD0E7D6291D1A08001DDB85 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/youtube/youtube-ios-player-helper.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		FCD9FDE928F5A7C5001968ED /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
-			};
-		};
-		FCD9FDEC28F5A7E7001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SvenTiigi/YouTubePlayerKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
 			};
 		};
 		FCD9FDEF28F5A807001968ED /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -790,15 +826,20 @@
 			package = FC5515E828FEC39D00EE70F8 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
 			productName = Reachability;
 		};
+		FC9DEB01291BE8E700F01EA5 /* netfox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC9DEB00291BE8E700F01EA5 /* XCRemoteSwiftPackageReference "netfox" */;
+			productName = netfox;
+		};
+		FCD0E7D7291D1A08001DDB85 /* YouTubeiOSPlayerHelper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FCD0E7D6291D1A08001DDB85 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */;
+			productName = YouTubeiOSPlayerHelper;
+		};
 		FCD9FDEA28F5A7C5001968ED /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FCD9FDE928F5A7C5001968ED /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		FCD9FDED28F5A7E7001968ED /* YouTubePlayerKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FCD9FDEC28F5A7E7001968ED /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */;
-			productName = YouTubePlayerKit;
 		};
 		FCD9FDF028F5A807001968ED /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

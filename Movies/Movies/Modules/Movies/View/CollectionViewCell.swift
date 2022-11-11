@@ -9,26 +9,28 @@ import UIKit
 import Kingfisher
 
 final class CollectionViewCell: BaseCollectionViewCell {
-
+    
     //MARK: - Outlets
     @IBOutlet private weak var topGradientView: UIView!
     @IBOutlet private weak var bottomGradientView: UIView!
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var genresTotalLabel: UILabel!
-    @IBOutlet private weak var starImageView: UIImageView!
-    @IBOutlet private weak var votesCountLabel: UILabel!
+    @IBOutlet private weak var ratingLabel: UILabel!
     
     //MARK: - Properties
     private let radius: CGFloat = 10
-    private let gradientColorSet: [UIColor] = [
-        UIColor.black.withAlphaComponent(0.6),
-        UIColor.black.withAlphaComponent(0.4),
-        UIColor.black.withAlphaComponent(0.3),
-        UIColor.black.withAlphaComponent(0.2),
-        UIColor.black.withAlphaComponent(0.1),
-        UIColor.black.withAlphaComponent(0)
-    ]
+    private let gradientColorSet: [UIColor] = [.black.withAlphaComponent(0.8),
+                                               .black.withAlphaComponent(0.7),
+                                               .black.withAlphaComponent(0.6),
+                                               .black.withAlphaComponent(0.5),
+                                               .black.withAlphaComponent(0.4),
+                                               .black.withAlphaComponent(0.3),
+                                               .black.withAlphaComponent(0.2),
+                                               .black.withAlphaComponent(0.1),
+                                               .black.withAlphaComponent(0.05),
+                                               .black.withAlphaComponent(0.02),
+                                               .black.withAlphaComponent(0)]
     
     //MARK: - Life Cycle
     override func layoutSubviews() {
@@ -39,8 +41,12 @@ final class CollectionViewCell: BaseCollectionViewCell {
     //MARK: - Private methods
     private func applyVisualEffects() {
         contentView.cornerRadius = radius
-        topGradientView.addGradient(with: gradientColorSet, startPoint: .topCenter, endPoint: .bottomCenter)
-        bottomGradientView.addGradient(with: gradientColorSet, startPoint: .bottomCenter, endPoint: .topCenter)
+        topGradientView.addGradient(with: gradientColorSet,
+                                    startPoint: .topCenter,
+                                    endPoint: .bottomCenter)
+        bottomGradientView.addGradient(with: gradientColorSet,
+                                       startPoint: .bottomCenter,
+                                       endPoint: .topCenter)
         addShadow()
     }
     
@@ -56,6 +62,6 @@ final class CollectionViewCell: BaseCollectionViewCell {
         setPoster(for: movie)
         titleLabel.text = [movie.title, movie.releaseYear].joined(separator: .commaSeparator)
         genresTotalLabel.text = movie.genres.joined(separator: .commaSeparator)
-        votesCountLabel.text = movie.votesCount
+        ratingLabel.text = movie.votesAverage
     }
 }

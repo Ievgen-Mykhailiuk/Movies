@@ -38,7 +38,7 @@ class BaseRouter: BaseModuleRouter {
     func show(viewController: UIViewController,
               isModal: Bool,
               animated: Bool,
-              completion: EmptyBlock?) {
+              completion: EmptyBlock? = nil) {
         let presentingViewController = navigationController ?? self.viewController
         if isModal {
             presentingViewController.present(viewController,
@@ -52,7 +52,7 @@ class BaseRouter: BaseModuleRouter {
     }
     
     func close(animated: Bool,
-               completion: EmptyBlock?) {
+               completion: EmptyBlock? = nil) {
         if viewController.isModal {
             if let navigationController = navigationController {
                 navigationController.dismiss(animated: animated,
@@ -69,7 +69,7 @@ class BaseRouter: BaseModuleRouter {
     
     func goBack(to viewController: UIViewController,
                 animated: Bool,
-                completion: EmptyBlock?) {
+                completion: EmptyBlock? = nil) {
         navigationController?.popToViewController(viewController,
                                                   animated: animated,
                                                   completion: completion)

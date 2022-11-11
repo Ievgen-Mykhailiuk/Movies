@@ -27,8 +27,8 @@ final class DefaultNetworkService: NetworkService {
                              method: endPoint.httpMethod,
                              parameters: endPoint.parameters,
                              encoding: endPoint.encoding)
-        .validate(statusCode: 200..<300)
-        .responseDecodable(of: T.self) { response in
+                    .validate(statusCode: 200..<300)
+                    .responseDecodable(of: T.self) { response in
             
             switch response.result {
             case .success(let data):

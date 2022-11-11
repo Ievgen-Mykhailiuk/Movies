@@ -25,7 +25,7 @@ final class ImageManager {
                 switch result {
                 case .success(let value):
                     completion?(value.image)
-                    if value.cacheType == .none, let imageData = value.image.jpegData(compressionQuality: 0.1) {
+                    if value.cacheType == .none, let imageData = value.image.jpegData(compressionQuality: 1) {
                         ImageCache.default.storeToDisk(imageData, forKey: urlString)
                     }
                 case .failure(_):

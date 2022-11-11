@@ -13,7 +13,7 @@ protocol MoviesPresenter {
     func getItem(for index: Int) -> MovieModel
     func getItemsCount(hasLoader: Bool) -> Int
     func getNextPage(sort type: SortType)
-    func search(text: String)
+    func search(text: String, completion: EmptyBlock?)
     func stopSearch()
     func didSelectItem(at index: Int)
 }
@@ -24,18 +24,18 @@ final class MoviesViewPresenter {
     private weak var view: MoviesView!
     private let dataManager: DefaultMoviesRepository
     private let router: DefaultMoviesRouter
-    private let minSymbolsToSearch: Int = 2
     private var isLoading: Bool = false
     private var searchWorkItem: DispatchWorkItem?
     private var searchText: String = .empty
     private var genres = [GenreModel]()
-    
+    private let loader: Int = 1
     private var isSearchActive: Bool {
         return !searchText.isEmpty
     }
     
     private var movies = [MovieModel]() {
         didSet {
+            guard !movies.isEmpty else { return }
             updateView()
         }
     }
@@ -88,7 +88,7 @@ final class MoviesViewPresenter {
         }
     }
     
-    private func getSearchResults(hasNextPage: Bool) {
+    private func getSearchResults(hasNextPage: Bool, completion: EmptyBlock? = nil) {
         searchWorkItem?.cancel()
         let newSearchWorkItem = DispatchWorkItem {
             guard !self.isLoading else { return }
@@ -112,6 +112,7 @@ final class MoviesViewPresenter {
                 case .failure(let error):
                     self.view.showError(with: error.localizedDescription)
                 }
+                completion?()
             }
         }
         searchWorkItem = newSearchWorkItem
@@ -194,7 +195,7 @@ extension MoviesViewPresenter: MoviesPresenter {
             } else if let currentPage = list.last?.page,
                       let totalPages = list.last?.totalPages,
                       currentPage < totalPages {
-                return list.count + 1
+                return list.count + loader
             } else {
                 return list.count
             }
@@ -209,14 +210,13 @@ extension MoviesViewPresenter: MoviesPresenter {
         }
     }
     
-    func search(text: String) {
-        if text.count >= minSymbolsToSearch {
-            searchText = text
-            searchResults.removeAll()
-            getSearchResults(hasNextPage: false)
-        } else {
+    func search(text: String, completion: EmptyBlock?) {
+        guard !text.isEmpty else {
             stopSearch()
-        }
+            return }
+        searchText = text
+        searchResults.removeAll()
+        getSearchResults(hasNextPage: false, completion: completion)
     }
     
     func stopSearch() {
@@ -228,7 +228,7 @@ extension MoviesViewPresenter: MoviesPresenter {
     func didSelectItem(at index: Int) {
         let movie = getItem(for: index)
         ReachabilityManager.shared.isNetworkAvailable ?
-        router.showDetails(for: movie.id) :
+        router.showDetails(for: movie) :
         view.showError(with: NetworkError.offline.errorDescription)
     }
 }

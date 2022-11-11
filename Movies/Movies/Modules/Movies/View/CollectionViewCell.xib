@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,10 +20,9 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="D9M-bk-so4">
                         <rect key="frame" x="0.0" y="0.0" width="885" height="346"/>
-                        <color key="backgroundColor" name="appColor"/>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hdp-fq-2AR">
-                        <rect key="frame" x="0.0" y="0.0" width="885" height="33"/>
+                        <rect key="frame" x="0.0" y="0.0" width="885" height="46"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="yq3-Ik-WVh">
                                 <rect key="frame" x="7" y="2" width="871" height="29"/>
@@ -39,17 +37,17 @@
                             </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="yq3-Ik-WVh" secondAttribute="bottom" constant="2" id="Ds3-yI-nXw"/>
+                            <constraint firstAttribute="bottom" secondItem="yq3-Ik-WVh" secondAttribute="bottom" constant="15" id="Ds3-yI-nXw"/>
                             <constraint firstAttribute="trailing" secondItem="yq3-Ik-WVh" secondAttribute="trailing" constant="7" id="Qyw-Y2-t1u"/>
                             <constraint firstItem="yq3-Ik-WVh" firstAttribute="leading" secondItem="hdp-fq-2AR" secondAttribute="leading" constant="7" id="hji-mN-Tgp"/>
                             <constraint firstItem="yq3-Ik-WVh" firstAttribute="top" secondItem="hdp-fq-2AR" secondAttribute="top" constant="2" id="nq7-ru-6F3"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TLK-hs-MGu">
-                        <rect key="frame" x="0.0" y="320" width="885" height="26"/>
+                        <rect key="frame" x="0.0" y="312" width="885" height="34"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="86U-wm-HEk">
-                                <rect key="frame" x="7" y="2" width="871" height="20"/>
+                                <rect key="frame" x="7" y="10" width="871" height="20"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="NVD-M3-4gS">
                                         <rect key="frame" x="0.0" y="0.0" width="808" height="20"/>
@@ -81,7 +79,7 @@
                             </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="86U-wm-HEk" firstAttribute="top" secondItem="TLK-hs-MGu" secondAttribute="top" constant="2" id="Mzg-Me-DQA"/>
+                            <constraint firstItem="86U-wm-HEk" firstAttribute="top" secondItem="TLK-hs-MGu" secondAttribute="top" constant="10" id="Mzg-Me-DQA"/>
                             <constraint firstItem="86U-wm-HEk" firstAttribute="leading" secondItem="TLK-hs-MGu" secondAttribute="leading" constant="7" id="hML-ba-iPw"/>
                             <constraint firstAttribute="trailing" secondItem="86U-wm-HEk" secondAttribute="trailing" constant="7" id="jnH-kB-PBA"/>
                             <constraint firstAttribute="bottom" secondItem="86U-wm-HEk" secondAttribute="bottom" constant="4" id="ydx-HT-gCK"/>
@@ -107,19 +105,15 @@
                 <outlet property="bottomGradientView" destination="TLK-hs-MGu" id="zVy-iq-YWa"/>
                 <outlet property="genresTotalLabel" destination="Pge-OC-AIh" id="g8z-RE-Gbk"/>
                 <outlet property="posterImageView" destination="D9M-bk-so4" id="F6e-IP-O6A"/>
-                <outlet property="starImageView" destination="Cn8-TA-PYB" id="sbr-e1-avE"/>
+                <outlet property="ratingLabel" destination="iEH-ar-Lo1" id="o4w-Wl-azy"/>
                 <outlet property="titleLabel" destination="IUS-K1-v25" id="Gke-tg-1b2"/>
                 <outlet property="topGradientView" destination="hdp-fq-2AR" id="KnU-mk-1CK"/>
-                <outlet property="votesCountLabel" destination="iEH-ar-Lo1" id="o4w-Wl-azy"/>
             </connections>
             <point key="canvasLocation" x="532.60869565217399" y="219.64285714285714"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="star.fill" catalog="system" width="128" height="116"/>
-        <namedColor name="appColor">
-            <color red="0.23899999260902405" green="0.41200000047683716" blue="0.44999998807907104" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

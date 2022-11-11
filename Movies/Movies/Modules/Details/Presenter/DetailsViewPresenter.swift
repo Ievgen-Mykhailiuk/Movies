@@ -8,6 +8,7 @@
 import UIKit
 
 protocol DetailsPresenter {
+    func getPath() -> String
     func viewDidLoad()
     func playTrailer()
     func showPoster(_ poster: UIImage)
@@ -20,17 +21,20 @@ final class DetailsViewPresenter {
     private let dataManager: DefaultDetailsRepository
     private let router: DefaultDetailsRouter
     private let movieID: Int
+    private let posterPath: String
     private var movie: DetailsModel?
     
     //MARK: - Life Cycle
     init(view: DetailsView,
          dataManager: DefaultDetailsRepository,
          router: DefaultDetailsRouter,
-         movieID: Int) {
+         movieID: Int,
+         posterPath: String) {
         self.view = view
         self.dataManager = dataManager
         self.router = router
         self.movieID = movieID
+        self.posterPath = posterPath
     }
     
     //MARK: - Private Methods
@@ -64,6 +68,10 @@ final class DetailsViewPresenter {
 
 //MARK: - DetailsPresenterProtocol
 extension DetailsViewPresenter: DetailsPresenter {
+    func getPath() -> String {
+        return posterPath
+    }
+    
     func viewDidLoad() {
         getDetails()
     }

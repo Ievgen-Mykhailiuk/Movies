@@ -15,6 +15,7 @@ extension UIViewController {
     }
     
     var loadingViewTag: Int { return 999999 }
+    var activityIndicatorTag: Int { return 888888 }
     
     func showAlert(title: String?,
                    message: String?,
@@ -49,13 +50,14 @@ extension UIViewController {
         return controller
     }
     
-    func showLoadingView(indicatorColor: UIColor?, backgroundColor: UIColor?) {
+    func showLoadingView(indicatorColor: UIColor? = .gray, backgroundColor: UIColor? = .lightGray) {
         let backgroundView = UIView(frame: self.view.bounds)
         backgroundView.backgroundColor = backgroundColor ?? .white
         backgroundView.tag = loadingViewTag
         let activityIndicator =  UIActivityIndicatorView(style: .large)
         activityIndicator.color = indicatorColor ?? .gray
         activityIndicator.center = backgroundView.center
+        activityIndicator.tag = activityIndicatorTag
         backgroundView.addSubview(activityIndicator)
         DispatchQueue.main.async {
             activityIndicator.startAnimating()
@@ -64,9 +66,14 @@ extension UIViewController {
     }
     
     func hideLoadingView() {
-        if let loadingView = self.view.viewWithTag(loadingViewTag) {
+        if let loadingView = self.view.viewWithTag(loadingViewTag),
+           let activityIndicator = loadingView.viewWithTag(activityIndicatorTag) {
             DispatchQueue.main.async {
-                loadingView.removeFromSuperview()
+                activityIndicator.removeFromSuperview()
+                UIView.animate(withDuration: 0.4,
+                               animations: { loadingView.backgroundColor = .clear }) { _ in
+                    loadingView.removeFromSuperview()
+                }
             }
         }
     }
