@@ -10,7 +10,6 @@ import UIKit
 typealias ErrorBlock = (Error) -> Void
 typealias EmptyBlock = () -> Void
 typealias ImageBlock = (UIImage?) -> Void
-typealias ActionBlock = (UIAlertAction) -> Void
 typealias MoviesBlock = (Result<[MovieModel], Error>) -> Void
 typealias GenresBlock = (Result<[GenreModel], Error>) -> Void
 typealias DetailsBlock = (Result<DetailsModel, Error>) -> Void

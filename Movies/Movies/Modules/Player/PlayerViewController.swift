@@ -55,12 +55,12 @@ final class PlayerViewController: UIViewController {
     // MARK: - Private Methods
     private func initialSetup() {
         showLoadingView()
-        playerView.delegate = self
-        setupBackButton()
         view.addSubview(playerView)
+        playerView.delegate = self
+        setupCloseButton()
     }
     
-    private func setupBackButton() {
+    private func setupCloseButton() {
         let tap = UITapGestureRecognizer(target: self, action:  #selector(close(_:)))
         closeButton.addGestureRecognizer(tap)
         view.addSubview(closeButton)
@@ -79,5 +79,6 @@ extension PlayerViewController: PlayerView {
 extension PlayerViewController: YTPlayerViewDelegate {
     func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
         hideLoadingView()
+        playerView.playVideo()
     }
 }

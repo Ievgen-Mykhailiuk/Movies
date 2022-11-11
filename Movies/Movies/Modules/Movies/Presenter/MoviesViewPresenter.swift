@@ -5,7 +5,7 @@
 //  Created by Евгений  on 26/09/2022.
 //
 
-import UIKit
+import Foundation
 
 protocol MoviesPresenter {
     func viewDidLoad()
@@ -213,7 +213,8 @@ extension MoviesViewPresenter: MoviesPresenter {
     func search(text: String, completion: EmptyBlock?) {
         guard !text.isEmpty else {
             stopSearch()
-            return }
+            return
+        }
         searchText = text
         searchResults.removeAll()
         getSearchResults(hasNextPage: false, completion: completion)

@@ -64,11 +64,11 @@ final class PosterViewController: UIViewController {
     private func setup() {
         view.backgroundColor = .black
         view.addSubview(scrollView)
-        setupBackButton()
+        setupCloseButton()
         setupSwipeRecognizer()
     }
     
-    private func setupBackButton() {
+    private func setupCloseButton() {
         let tap = UITapGestureRecognizer(target: self, action:  #selector(close(_:)))
         closeButton.addGestureRecognizer(tap)
         view.addSubview(closeButton)

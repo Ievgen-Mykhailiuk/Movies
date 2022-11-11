@@ -9,7 +9,7 @@ import UIKit
 
 protocol DetailsView: AnyObject {
     func showPoster(with path: String)
-    func showDetails(movie: DetailsModel?)
+    func showDetails(for movie: DetailsModel?)
     func showError(with message: String)
 }
 
@@ -101,7 +101,7 @@ final class DetailsViewController: UIViewController {
         }
     }
     
-    private func configure(movie: DetailsModel?, completion: EmptyBlock? = nil) {
+    private func configure(by movie: DetailsModel?, completion: EmptyBlock? = nil) {
         guard let movie = movie else { return }
         countryLabel.text =  movie.countries.joined(separator: .commaSeparator)
         releaseYearLabel.text = movie.releaseYear
@@ -125,8 +125,8 @@ extension DetailsViewController: DetailsView {
         showAlert(title: .defaultError, message: message)
     }
     
-    func showDetails(movie: DetailsModel?) {
-        configure(movie: movie) {
+    func showDetails(for movie: DetailsModel?) {
+        configure(by: movie) {
             DispatchQueue.main.async {
                 self.applyVisualEffects()
             }

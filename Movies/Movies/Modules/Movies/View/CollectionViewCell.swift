@@ -15,7 +15,7 @@ final class CollectionViewCell: BaseCollectionViewCell {
     @IBOutlet private weak var bottomGradientView: UIView!
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var genresTotalLabel: UILabel!
+    @IBOutlet private weak var genresLabel: UILabel!
     @IBOutlet private weak var ratingLabel: UILabel!
     
     //MARK: - Properties
@@ -61,7 +61,7 @@ final class CollectionViewCell: BaseCollectionViewCell {
     func configure(for movie: MovieModel) {
         setPoster(for: movie)
         titleLabel.text = [movie.title, movie.releaseYear].joined(separator: .commaSeparator)
-        genresTotalLabel.text = movie.genres.joined(separator: .commaSeparator)
+        genresLabel.text = movie.genres.joined(separator: .commaSeparator)
         ratingLabel.text = movie.votesAverage
     }
 }

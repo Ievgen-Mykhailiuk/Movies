@@ -5,7 +5,7 @@
 //  Created by Евгений  on 26/09/2022.
 //
 
-import UIKit
+import Foundation
 
 //MARK: - UI Movie Model
 struct MovieModel {

@@ -44,7 +44,7 @@ final class DetailsViewPresenter {
             case .success(let movie):
                 self?.movie = movie
                 self?.getTrailerID {
-                    self?.view.showDetails(movie: self?.movie)
+                    self?.view.showDetails(for: self?.movie)
                 }
             case .failure(let error):
                 self?.view.showError(with: error.localizedDescription)

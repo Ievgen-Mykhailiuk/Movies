@@ -5,7 +5,7 @@
 //  Created by Евгений  on 26/09/2022.
 //
 
-import UIKit
+import Foundation
 
 protocol MoviesRepository {
     func fetch(page: Int, genres: [GenreModel], sortType: SortType, completion: @escaping MoviesBlock)

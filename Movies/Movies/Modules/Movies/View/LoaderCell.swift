@@ -16,9 +16,9 @@ final class LoaderCell: BaseCollectionViewCell {
     private let labelTitle: String = "Loading..."
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: contentView.frame.minX,
-                                          y: contentView.frame.minY + spacing,
-                                          width: contentView.frame.width,
+        let label = UILabel(frame: CGRect(x: .zero,
+                                          y: labelHeigth / 2,
+                                          width: frame.width,
                                           height: labelHeigth))
         label.attributedText = NSAttributedString(
             string: labelTitle,
@@ -31,7 +31,7 @@ final class LoaderCell: BaseCollectionViewCell {
     
     private lazy var activityInidicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
-        indicator.center = CGPoint(x: contentView.frame.midX, y: contentView.frame.midY)
+        indicator.center = contentView.center
         indicator.style = .medium
         indicator.color = Constants.appColor
         return indicator

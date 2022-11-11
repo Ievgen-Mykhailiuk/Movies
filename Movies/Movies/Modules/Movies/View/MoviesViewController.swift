@@ -102,7 +102,6 @@ final class MoviesViewController: UIViewController {
     private lazy var backgroundView: UIView = {
         let backgroundView = UIView()
         backgroundView.frame = view.bounds
-        view.addSubview(backgroundView)
         backgroundView.addGradient(with: [.white, .darkGray], startPoint: .bottomLeft, endPoint: .topRight)
         return backgroundView
     }()
@@ -282,9 +281,8 @@ extension MoviesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if indexPath.item == presenter.getItemsCount(hasLoader: false) - itemsLeftToNextPage {
-            presenter.getNextPage(sort: currentSortType)
-        }
+        guard indexPath.item == presenter.getItemsCount(hasLoader: false) - itemsLeftToNextPage else { return }
+        presenter.getNextPage(sort: currentSortType)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

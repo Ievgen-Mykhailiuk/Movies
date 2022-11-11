@@ -103,7 +103,7 @@
             <size key="customSize" width="885" height="346"/>
             <connections>
                 <outlet property="bottomGradientView" destination="TLK-hs-MGu" id="zVy-iq-YWa"/>
-                <outlet property="genresTotalLabel" destination="Pge-OC-AIh" id="g8z-RE-Gbk"/>
+                <outlet property="genresLabel" destination="Pge-OC-AIh" id="g8z-RE-Gbk"/>
                 <outlet property="posterImageView" destination="D9M-bk-so4" id="F6e-IP-O6A"/>
                 <outlet property="ratingLabel" destination="iEH-ar-Lo1" id="o4w-Wl-azy"/>
                 <outlet property="titleLabel" destination="IUS-K1-v25" id="Gke-tg-1b2"/>
