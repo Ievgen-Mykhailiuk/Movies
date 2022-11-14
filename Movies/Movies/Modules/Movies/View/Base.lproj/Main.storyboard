@@ -42,7 +42,7 @@
                                 <rect key="frame" x="0.0" y="48" width="414" height="848"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v0X-p7-Q2H">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="853"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="873"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="UVJ-V2-EfC">
                                                 <rect key="frame" x="10" y="10" width="394" height="833"/>
@@ -176,7 +176,7 @@
                                             </stackView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="UVJ-V2-EfC" secondAttribute="bottom" constant="10" id="ND2-Na-3KY"/>
+                                            <constraint firstAttribute="bottom" secondItem="UVJ-V2-EfC" secondAttribute="bottom" constant="30" id="ND2-Na-3KY"/>
                                             <constraint firstItem="UVJ-V2-EfC" firstAttribute="leading" secondItem="v0X-p7-Q2H" secondAttribute="leading" constant="10" id="beW-g4-43z"/>
                                             <constraint firstAttribute="trailing" secondItem="UVJ-V2-EfC" secondAttribute="trailing" constant="10" id="sKt-Ia-xbX"/>
                                             <constraint firstItem="UVJ-V2-EfC" firstAttribute="top" secondItem="v0X-p7-Q2H" secondAttribute="top" constant="10" id="yZn-tv-pOF"/>
